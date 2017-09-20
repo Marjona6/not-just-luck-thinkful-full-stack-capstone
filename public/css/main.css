@@ -1,0 +1,278 @@
+/* CSS reset */
+
+
+/* http://meyerweb.com/eric/tools/css/reset/
+v2.0 | 20110126
+License: none (public domain)
+*/
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 1em;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+
+/* HTML5 display-role reset for older browsers */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+/* PAGE DEFAULTS */
+/** {
+    border: 1px solid gray;
+}*/
+
+html {
+    background-color: #E0CCBC;
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    color: #1E3F20;
+}
+
+h1 {
+    font-size: 300%;
+    font-family: 'Berkshire Swash', cursive;
+}
+
+h2 {
+    font-size: 250%;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h3 {
+    font-size: 200%;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* HEADER */
+header {
+    background-color: #1E3F20;
+    color: #CCB241;
+    padding: 1rem;
+}
+
+/* MAIN */
+main {
+    text-align: center;
+}
+
+/* LANDING PAGE */
+#landing-page {
+
+}
+
+#hero {
+    background: #1E3F20 url("../img/clover.jpg") no-repeat center center fixed;
+    height: 500px;
+    background-size: cover;
+}
+
+#hero-blurb {
+    padding-top: 200px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 400%;
+    color: yellow;
+}
+
+.landing-block {
+    padding: 5rem;
+    line-height: 6rem;
+    font-size: 180%;
+}
+
+.landing-image {
+    border: 1px solid black;
+    margin: 2%;
+    display: inline-block;
+    width: 25%;
+    vertical-align: top;
+}
+
+.landing-blurb {
+    display: inline-block;
+    width: 65%;
+}
+
+.landing-block:nth-child(odd) {
+    background: #CCB241;
+    color: #1E3F20;
+}
+
+.landing-block:nth-child(odd) .landing-image {
+    height: 200px;
+    width: auto;
+    display: inline-block;
+}
+
+.landing-block:nth-child(odd) .landing-blurb {
+    display: inline-block;
+}
+
+.landing-block:nth-child(even) {
+    background: #1E3F20;
+    color: #CCB241;
+}
+
+.landing-block:nth-child(even) .landing-image {
+    height: 200px;
+    width: auto;
+    display: inline-block;
+}
+
+.landing-block:nth-child(even) .landing-blurb {
+    display: inline-block;
+}
+
+/* ACCOUNT SIGNUP PAGE */
+#account-signup-page {
+    padding: 2rem;
+    line-height: 2rem;
+}
+
+.my-buttons {
+    display: block;
+    margin: 1rem auto 1rem auto;
+    padding: 0.5rem;
+    background-color: black;
+    color: yellow;
+    line-height: 1rem;
+}
+
+/* SIGNIN PAGE */
+#signin-page {
+    margin: 2rem 0 2rem 0;
+    padding: 2rem;
+    line-height: 2rem;
+}
+
+/* ACCOUNT SETUP PAGE */
+#account-setup-page {
+    margin: 2rem auto 2rem auto;
+    padding: 2rem;
+    line-height: 2rem;
+    width: 95%;
+}
+
+#account-setup-page h2, #account-setup-page h3 {
+    padding: 1rem 0 1rem 0;
+}
+
+#account-setup-page ul.checkbox {
+    list-style: none;
+    text-align: left;
+}
+
+#account-setup-page ul.checkbox li input {
+    margin-right: 0.25rem;
+    width: 10%;
+    display: inline-block;
+}
+
+#account-setup-page ul.checkbox li {
+    border: 1px transparent solid;
+    line-height: 1rem;
+    display: inline-block;
+    width: 16%;
+    vertical-align: top;
+    height: 2.5rem;
+}
+
+#account-setup-page ul.checkbox li label {
+    width: 85%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* USER HOMEPAGE */
+#user-home-page {
+    margin: 2rem 0 2rem 0;
+}
+
+#visualized-home {
+    margin: 2rem auto 2rem auto;
+    width: 90%;
+    border: 10px solid #1E3F20;
+    border-radius: 20px;
+    background: #CCB241;
+    padding: 3rem;
+}
+
+#user-avatar {
+    height: 100px;
+    width: 100px;
+    border-radius: 100px;
+    margin: 2rem auto 2rem auto;
+    background: #CCB241 url("../img/green-smiley.png") center;
+    background-size: 100px 100px;
+}
+
+#the-why, #the-how, #the-what, #the-when {
+    display: inline-block;
+    padding: 0 5rem 0 5rem;
+}
+
+/* VISUALS */
+#visuals {
+    line-height: 2rem;
+    padding: 2rem;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 0.25rem;
+}
+
+footer li {
+    display: inline;
+    padding: 1rem;
+}
+
+footer a {
+    color: #1E3F20;
+    text-decoration: none;
+}
