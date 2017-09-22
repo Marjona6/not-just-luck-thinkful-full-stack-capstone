@@ -1,0 +1,40 @@
+{
+  "name": "thinkful-full-stack-capstone",
+  "version": "1.0.0",
+  "description": "Not Just Luck is an interactive full-stack web app that helps users overcome impostor syndrome by guiding them to see the history of their own successes as well as the skills and traits that made those successes possible.",
+  "main": "server.js",
+  "dependencies": {
+    "bcrypt": "^0.8.7",
+    "bcryptjs": "^2.3.0",
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.4",
+    "express": "^4.14.0",
+    "isomorphic-fetch": "^2.2.1",
+    "mongodb": "^2.2.9",
+    "mongoose": "^4.5.10",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react-fontawesome": "^1.6.1",
+    "react-redux": "^4.4.5",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
+    "unirest": "^0.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone.git"
+  },
+  "author": "Meryem Yanar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/issues"
+  },
+  "homepage": "https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone#readme"
+}
