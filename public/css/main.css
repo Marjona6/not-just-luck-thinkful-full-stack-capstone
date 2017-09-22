@@ -167,6 +167,24 @@ main {
     display: inline-block;
 }
 
+#block-1 .landing-image {
+    background: black url("../img/graduate.jpg") no-repeat center center;
+    background-size: cover;
+    width: 20%;
+}
+
+#block-2 .landing-image {
+    background: black url("../img/laptop-woman.jpg") no-repeat center center;
+    background-size: cover;
+    width: 20%;
+}
+
+#block-3 .landing-image {
+    background: black url("../img/art-woman.jpg") no-repeat center center;
+    background-size: cover;
+    width: 20%;
+}
+
 /* ACCOUNT SIGNUP PAGE */
 #account-signup-page {
     padding: 2rem;
