@@ -49,15 +49,15 @@
     	<section id="account-signup-page">
     		<h3>Start My Best Life Now</h3>
     		<p>You can overcome Impostor Syndrome and achieve your goals with confidence.</p>
-    		<form id="new-account-form">
+    		<form id="new-account-form" method="post">
   				<p>First name:</p>
-    			<input type="text" name="fname" required>
+    			<input type="text" name="fname" value="Charlene"required>
     			<p>Username:</p>
-    			<input type="text" name="uname" required>
+    			<input type="text" name="uname" value="charlene123" required>
     			<p>Password:</p>
-    			<input type="password" name="pw" required>
+    			<input type="password" name="pw" value="1234" required>
     			<p>Confirm password:</p>
-    			<input type="password" name="confirm-pw" required>
+    			<input type="password" name="confirm-pw" value="1234" required>
     			<input type="submit" id="js-new-account" class="my-buttons" value="Let's Do This!">
     		</form>
     	</section>
@@ -84,7 +84,7 @@
     		<form>
     			<h3>What did you achieve?</h3>
     				<p>Briefly describe your big achievement.</p>
-    				<input type="text">
+    				<input id="achieve-what" type="text">
     			<h3>How did you achieve it?</h3>
 	    			<p>What specific skills or character traits did you draw on?</p>
 	    			<fieldset>
@@ -118,10 +118,10 @@
 		    		</fieldset>
     			<h3>When did you achieve it?</h3>
     				<p>A rough estimate is fine here.</p>
-    					<input type="date">
+    					<input id="achieve-when" type="date">
     			<h3>Why is it meaningful to you?</h3>
     				<p>Why is this accomplishment something you feel proud of?</p>
-    				<input type="textarea">
+    				<input id="achieve-why" type="textarea">
 	    		<input type="submit" id="js-submit-accomplishment" class="my-buttons" value="I Did This!">
 	    	</form>
     	</section>
@@ -147,7 +147,7 @@
     				<p>my timeline</p>
     			</div>
     		</div>
-    		<input type="submit" id="js-add-accomplishment" class="my-buttons" value="Add An Accomplishment">
+    		<input type="submit" method="post" id="js-add-accomplishment" class="my-buttons" value="Add An Accomplishment">
     	</section>
     	<section id="visuals">
     		<div id="visual-why">
