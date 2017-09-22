@@ -95,6 +95,22 @@ header {
     padding: 1rem;
 }
 
+header h1 {
+    display: inline-block;
+    width: auto;
+}
+
+header a {
+    color: #CCB241;
+    text-decoration: none;
+}
+
+#js-signin-link {
+    display: inline-block;
+    float: right;
+    margin-top: 2.5rem;
+}
+
 /* MAIN */
 main {
     text-align: center;
@@ -125,7 +141,7 @@ main {
 }
 
 .landing-image {
-    border: 1px solid black;
+    border: 1px solid transparent;
     margin: 2%;
     display: inline-block;
     width: 25%;
@@ -168,19 +184,19 @@ main {
 }
 
 #block-1 .landing-image {
-    background: black url("../img/graduate.jpg") no-repeat center center;
+    background: transparent url("../img/graduate.jpg") no-repeat center center;
     background-size: cover;
     width: 20%;
 }
 
 #block-2 .landing-image {
-    background: black url("../img/laptop-woman.jpg") no-repeat center center;
+    background: transparent url("../img/laptop-woman.jpg") no-repeat center center;
     background-size: cover;
     width: 20%;
 }
 
 #block-3 .landing-image {
-    background: black url("../img/art-woman.jpg") no-repeat center center;
+    background: transparent url("../img/art-woman.jpg") no-repeat center center;
     background-size: cover;
     width: 20%;
 }

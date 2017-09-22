@@ -15,6 +15,7 @@
 <body>
     <header>
     	<h1>Not Just Luck</h1>
+        <a href="#" id="js-signin-link" alt="Sign In">Sign In</a>
     </header>
     <main>
     	<section id="landing-page">
@@ -47,7 +48,7 @@
     	<section id="account-signup-page">
     		<h3>Start My Best Life Now</h3>
     		<p>You can overcome Impostor Syndrome and achieve your goals with confidence.</p>
-    		<form>
+    		<form id="new-account-form">
   				<p>First name:</p>
     			<input type="text" name="fname" required>
     			<p>Username:</p>
@@ -56,7 +57,7 @@
     			<input type="password" name="pw" required>
     			<p>Confirm password:</p>
     			<input type="password" name="confirm-pw" required>
-    			<input type="submit" class="my-buttons" value="Let's Do This!">
+    			<input type="submit" id="js-new-account" class="my-buttons" value="Let's Do This!">
     		</form>
     	</section>
     	<section id="signin-page">
@@ -66,7 +67,7 @@
     			<input type="text" required>
     			<p>Password:</p>
     			<input type="password" required>
-    			<input type="submit" class="my-buttons" value="Sign In">
+    			<input type="submit" id="js-signin-button" class="my-buttons" value="Sign In">
     		</form>
     	</section>
     	<section id="account-setup-page">
@@ -120,7 +121,7 @@
     			<h3>Why is it meaningful to you?</h3>
     				<p>Why is this accomplishment something you feel proud of?</p>
     				<input type="textarea">
-	    		<input type="submit" class="my-buttons" value="I Did This!">
+	    		<input type="submit" id="js-submit-accomplishment" class="my-buttons" value="I Did This!">
 	    	</form>
     	</section>
     	<section id="user-home-page">
@@ -145,7 +146,7 @@
     				<p>my timeline</p>
     			</div>
     		</div>
-    		<input type="submit" class="my-buttons" value="Add An Accomplishment">
+    		<input type="submit" id="js-add-accomplishment" class="my-buttons" value="Add An Accomplishment">
     	</section>
     	<section id="visuals">
     		<div id="visual-why">
