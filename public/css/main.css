@@ -88,6 +88,10 @@ h3 {
     font-family: 'Montserrat', sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+
 /* HEADER */
 header {
     background-color: #1E3F20;
@@ -105,7 +109,7 @@ header a {
     text-decoration: none;
 }
 
-#js-signin-link {
+#js-signin-link, #js-signout-link {
     display: inline-block;
     float: right;
     margin-top: 2.5rem;
@@ -264,6 +268,10 @@ main {
 /* USER HOMEPAGE */
 #user-home-page {
     margin: 2rem 0 2rem 0;
+}
+
+#user-home-page a {
+    color: #1E3F20;
 }
 
 #visualized-home {

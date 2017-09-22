@@ -6,6 +6,8 @@
 .timeline-container h6 {
   font-size: 14px;
   line-height: 1.5;
+  color: #1E3F20;
+  font-family: 'Montserrat', sans-serif;
 }
 .timeline-container h1 {
   font-size: 2rem;
@@ -15,6 +17,7 @@
 .timeline-container p {
   font-size: 0.8rem;
   line-height: 1.5;
+  color: #1E3F20;
 }
 .timeline-container {
   max-width: 1024px;

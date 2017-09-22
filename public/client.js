@@ -9,6 +9,7 @@ $(document).ready(function () {
 	$('#account-setup-page').hide();
 	$('#user-home-page').hide();
 	$('#visuals').hide();
+	$('#js-signout-link').hide();
 	$('#landing-page').show();
 	$('#account-signup-page').show();
 
@@ -36,6 +37,7 @@ $(document).ready(function () {
 		event.preventDefault();
 		$('#landing-page').hide();
 		$('#account-signup-page').hide();
+		$('#js-signin-link').hide();
 		$('#signin-page').show();
 	});
 
@@ -45,6 +47,12 @@ $(document).ready(function () {
 		// AJAX call to validate login info and sign user in
 		$('#signin-page').hide();
 		$('#user-home-page').show();
+		$('#js-signout-link').show();
+	});
+
+	// when user clicks sign-out link in header
+	document.getElementById('js-signout-link').addEventListener('click', function(event) {
+		location.reload();
 	});
 
 	// when user clicks Add Accomplishment button from #user-home-page
@@ -63,4 +71,55 @@ $(document).ready(function () {
 		$('#account-setup-page').hide();
 		$('#user-home-page').show();
 	});
+
+// when user clicks how/what/when/why links from home page
+	// when user clicks WHY from home page
+	document.getElementById('the-why').addEventListener('click', function(event) {
+		$('#user-home-page').hide();
+		$('#visual-how').hide();
+		$('#visual-what').hide();
+		$('#visual-when').hide();
+		$('#visuals').show();
+		$('#visual-why').show();
+	});
+
+	// when user clicks HOW from home page
+	document.getElementById('the-how').addEventListener('click', function(event) {
+		$('#user-home-page').hide();
+		$('#visual-why').hide();
+		$('#visual-what').hide();
+		$('#visual-when').hide();
+		$('#visuals').show();
+		$('#visual-how').show();
+	});
+
+	// when user clicks WHEN from home page
+	document.getElementById('the-when').addEventListener('click', function(event) {
+		$('#user-home-page').hide();
+		$('#visual-how').hide();
+		$('#visual-what').hide();
+		$('#visual-why').hide();
+		$('#visuals').show();
+		$('#visual-when').show();
+	});
+
+	// when user clicks WHAT from home page
+	document.getElementById('the-what').addEventListener('click', function(event) {
+		$('#user-home-page').hide();
+		$('#visual-how').hide();
+		$('#visual-why').hide();
+		$('#visual-when').hide();
+		$('#visuals').show();
+		$('#visual-what').show();
+	});
+
+	// when user clicks Back button from any of the visuals
+	document.getElementById('js-back-button').addEventListener('click', function(event) {
+		$('#visuals').hide();
+		$('#user-home-page').show();
+	});
 });
+
+// TODO: the rest of the visuals basic JS navigation; add some sort of back functionality to add new achievement page;
+// add AJAX calls and server functionality
+// add form validation for signin page
