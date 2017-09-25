@@ -181,13 +181,11 @@ $(document).ready(function () {
 	document.getElementById('the-why').addEventListener('click', function(event) {
 		$.getJSON('/achievements', function (res) {
 			for (let i=0; i<res.achievements.length; i++) {
-				console.log(res.achievements[i].achieveWhy);
 				if (res.achievements[i].achieveWhy !== undefined) {
 					let htmlContent = '<p>' + res.achievements[i].achieveWhy + '</p>';
 					$('#motivations').append(htmlContent);
 				};
 			};
-			console.log(res.achievements);
 		});
 		$('#user-home-page').hide();
 		$('#visual-how').hide();
@@ -219,6 +217,14 @@ $(document).ready(function () {
 
 	// when user clicks WHAT from home page
 	document.getElementById('the-what').addEventListener('click', function(event) {
+		$.getJSON('/achievements', function (res) {
+			for (let i=0; i<res.achievements.length; i++) {
+				if (res.achievements[i].achieveWhat !== undefined) {
+					let htmlContent = '<p>' + res.achievements[i].achieveWhat + '</p>';
+					$('#awesome-stuff').append(htmlContent);
+				};
+			};
+		});
 		$('#user-home-page').hide();
 		$('#visual-how').hide();
 		$('#visual-why').hide();
