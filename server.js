@@ -3,6 +3,7 @@ const Achievement = require('./models/achievement');
 const bodyParser = require('body-parser');
 const config = require('./config');
 const mongoose = require('mongoose');
+const moment = require('moment');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
@@ -135,7 +136,10 @@ app.post('/achievements/create', (req, res) => {
     achieveWhat = achieveWhat.trim();
     let achieveHow = req.body.achieveHow;
     let achieveWhy = req.body.achieveWhy;
-    let achieveWhen = req.body.achieveWhen;
+    let achieveWhen = moment(req.body.achieveWhen).format('MM-DD-YYYY');
+    // the moment formatting does not seem to be working; correctly console.logs in terminal
+    // but does not send correctly formatted date to DB
+    console.log(achieveWhen);
     let user = req.body.user;
     
         Achievement.create({

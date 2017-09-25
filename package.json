@@ -10,6 +10,7 @@
     "cors": "^2.8.4",
     "express": "^4.14.0",
     "isomorphic-fetch": "^2.2.1",
+    "moment": "^2.18.1",
     "mongodb": "^2.2.9",
     "mongoose": "^4.5.10",
     "passport": "^0.3.2",

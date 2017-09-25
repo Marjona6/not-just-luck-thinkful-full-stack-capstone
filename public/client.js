@@ -197,6 +197,13 @@ $(document).ready(function () {
 
 	// when user clicks HOW from home page
 	document.getElementById('the-how').addEventListener('click', function(event) {
+		$.getJSON('/achievements', function (res) {
+			for (let i=0; i<res.achievements.length; i++) {
+				// need to loop through each res.achievements[i].achieveHow array and add up the total of each trait
+				let htmlContent = '<p>' + res.achievements[i].achieveHow + '</p>';
+				$('#traits').append(htmlContent);
+			};
+		});
 		$('#user-home-page').hide();
 		$('#visual-why').hide();
 		$('#visual-what').hide();
@@ -207,6 +214,16 @@ $(document).ready(function () {
 
 	// when user clicks WHEN from home page
 	document.getElementById('the-when').addEventListener('click', function(event) {
+		$.getJSON('/achievements', function (res) {
+			console.log(res.achievements)
+			for (let i=0; i<res.achievements.length; i++) {
+				console.log(res.achievements[i].achieveWhen);
+				let htmlContent = `<div class="timeline-item" date-is="${res.achievements[i].achieveWhen}"><h1>
+					${res.achievements[i].achieveWhat}</h1><p>${res.achievements[i].achieveWhy}</p></div>`;				
+				console.log(htmlContent);
+				$('.timeline-container').append(htmlContent);
+			};
+		});
 		$('#user-home-page').hide();
 		$('#visual-how').hide();
 		$('#visual-what').hide();
