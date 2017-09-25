@@ -198,11 +198,30 @@ $(document).ready(function () {
 	// when user clicks HOW from home page
 	document.getElementById('the-how').addEventListener('click', function(event) {
 		$.getJSON('/achievements', function (res) {
+			let traitsObject = {};
 			for (let i=0; i<res.achievements.length; i++) {
 				// need to loop through each res.achievements[i].achieveHow array and add up the total of each trait
-				let htmlContent = '<p>' + res.achievements[i].achieveHow + '</p>';
-				$('#traits').append(htmlContent);
+				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
+					if (res.achievements[i].achieveHow[j] in traitsObject) {
+						// if the trait already exists in the object, increase its value by 1 (1 instance)
+						traitsObject[res.achievements[i].achieveHow[j]] += 1;
+					} else {
+						// if the trait does not exist in the object already, add it with value of 1 (1 instance)
+						traitsObject[res.achievements[i].achieveHow[j]]	= 1;
+					};
+				};
 			};
+			console.log(traitsObject);
+			console.log(Object.keys(traitsObject));
+			let htmlContent = '';
+			for (let i=0; i<Object.keys(traitsObject).length; i++) {
+				// let the font size of each trait vary with number of instances; more instances = greater font size
+				htmlContent += `<span class="size-${Object.values(traitsObject)[i]}"> ${Object.keys(traitsObject)[i].toLowerCase()} </span>`;
+				console.log(Object.keys(traitsObject)[i].toLowerCase());
+			}
+			console.log(htmlContent);
+			$('#traits').append(htmlContent);
+			
 		});
 		$('#user-home-page').hide();
 		$('#visual-why').hide();
