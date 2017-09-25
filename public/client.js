@@ -5,6 +5,7 @@
 // Triggers
 $(document).ready(function () {
 	// when page first loads
+	var user = undefined;
 	$('#signin-page').hide();
 	$('#account-setup-page').hide();
 	$('#user-home-page').hide();
@@ -35,6 +36,7 @@ $(document).ready(function () {
 				username: uname,
 				password: pw
 			};
+			user = uname;
 			// AJAX call to send form data up to server/DB and create new user
 			$.ajax({
 				type: 'POST',
@@ -75,9 +77,39 @@ $(document).ready(function () {
 	document.getElementById('js-signin-button').addEventListener('click', function(event) {
 		event.preventDefault();
 		// AJAX call to validate login info and sign user in
-		$('#signin-page').hide();
-		$('#user-home-page').show();
-		$('#js-signout-link').show();
+		const inputUname = $('input[name="signin-uname"]').val();
+		const inputPw = $('input[name="signin-pw"]').val();
+		// check for spaces, empty, undefined
+        if ((!inputUname) || (inputUname.length < 1) || (inputUname.indexOf(' ') > 0)) {
+            alert('Invalid email');
+        }
+        else if ((!inputPw) || (inputPw.length < 1) || (inputPw.indexOf(' ') > 0)) {
+            alert('Invalid password');
+        } else {
+            const unamePwObject = {
+                username: inputUname,
+                password: inputPw
+	        };
+	        user = inputUname;
+	        $.ajax({
+	        	type: "POST",
+	                url: "/signin",
+	                dataType: 'json',
+	                data: JSON.stringify(unamePwObject),
+	                contentType: 'application/json'
+	            })
+	            .done(function (result) {
+	            	$('#signin-page').hide();
+					$('#user-home-page').show();
+					$('#js-signout-link').show();
+	        	})
+	        	.fail(function (jqXHR, error, errorThrown) {
+	                console.log(jqXHR);
+	                console.log(error);
+	                console.log(errorThrown);
+	                alert('User does not exist! Please sign up using the sign-up button.');
+	            });
+		};
 	});
 
 	// when user clicks sign-out link in header
@@ -116,7 +148,9 @@ $(document).ready(function () {
 		console.log(achWhen);
 		const achWhy = $('input[id="achieve-why"]').val();
 		console.log(achWhy);
+		console.log('user is ' + user);
 		const newAchObject = {
+			user: user,
 			achieveWhat: achWhat,
 			achieveHow: achHow,
 			achieveWhen: achWhen,
@@ -145,6 +179,16 @@ $(document).ready(function () {
 // when user clicks how/what/when/why links from home page
 	// when user clicks WHY from home page
 	document.getElementById('the-why').addEventListener('click', function(event) {
+		$.getJSON('/achievements', function (res) {
+			for (let i=0; i<res.achievements.length; i++) {
+				console.log(res.achievements[i].achieveWhy);
+				if (res.achievements[i].achieveWhy !== undefined) {
+					let htmlContent = '<p>' + res.achievements[i].achieveWhy + '</p>';
+					$('#motivations').append(htmlContent);
+				};
+			};
+			console.log(res.achievements);
+		});
 		$('#user-home-page').hide();
 		$('#visual-how').hide();
 		$('#visual-what').hide();

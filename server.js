@@ -51,6 +51,7 @@ function closeServer() {
 }
 
 // ---------------USER ENDPOINTS-------------------------------------
+// creating a new user
 app.post('/users/create', (req, res) => {
     let username = req.body.username;
     username = username.trim();
@@ -88,16 +89,61 @@ app.post('/users/create', (req, res) => {
     });
 });
 
+// signing in a user
+app.post('/signin', function (req, res) {
+    const user = req.body.username;
+    const pw = req.body.password;
+    User
+        .findOne({
+            username: req.body.username
+        }, function(err, items) {
+            if (err) {
+                return res.status(500).json({
+                    message: "Internal server error"
+                });
+            }
+            if (!items) {
+                // bad username
+                return res.status(401).json({
+                    message: "Not found!"
+                });
+            } else {
+                items.validatePassword(req.body.password, function(err, isValid) {
+                    if (err) {
+                        console.log('There was an error validating the password.');
+                    }
+                    if (!isValid) {
+                        return res.status(401).json({
+                            message: "Not found"
+                        });
+                    } else {
+                        var logInTime = new Date();
+                        console.log("User logged in: " + req.body.username + ' at ' + logInTime);
+                        return res.json(items);
+                    }
+                });
+            };
+        });
+});
+
+
 // -------------ACHIEVEMENT ENDPOINTS------------------------------------------------
+// creating a new achievement
 app.post('/achievements/create', (req, res) => {
     console.log(req.body);
     let achieveWhat = req.body.achieveWhat;
     achieveWhat = achieveWhat.trim();
     let achieveHow = req.body.achieveHow;
+    let achieveWhy = req.body.achieveWhy;
+    let achieveWhen = req.body.achieveWhen;
+    let user = req.body.user;
     
         Achievement.create({
+            user,
             achieveWhat,
             achieveHow,
+            achieveWhen,
+            achieveWhy
         }, (err, item) => {
             if (err) {
                 return res.status(500).json({
@@ -110,6 +156,32 @@ app.post('/achievements/create', (req, res) => {
             }
         });
 });
+
+// accessing achievements: why
+app.get('/achievements', function (req, res) {
+    Achievement
+        .find()
+        .then(function (achievements) {
+            res.json({
+                achievements: achievements.map(function (achievement) {
+                    console.log(achievement);
+                    return achievement;
+                })
+            });
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal server error'
+            });
+        });
+});
+
+// accessing achievements: what
+
+// accessing achievements: when
+
+// accessing achievements: how
 
 
 // catch-all endpoint if client makes request to non-existent endpoint

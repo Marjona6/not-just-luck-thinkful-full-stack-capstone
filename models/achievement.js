@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 // const bcrypt = require('bcryptjs');
 
 const achievementSchema = new mongoose.Schema({
+    user: {
+        type: String,
+        required: false},
 	achieveWhat: {
 		type: String,
 		required: false},
@@ -17,16 +20,6 @@ const achievementSchema = new mongoose.Schema({
         type: String,
         required: false}
 });
-
-// userSchema.methods.validatePassword = function(password, callback) {
-//     bcrypt.compare(password, this.password, (err, isValid) => {
-//         if (err) {
-//             callback(err);
-//             return;
-//         }
-//         callback(null, isValid);
-//     });
-// };
 
 const Achievement = mongoose.model('Achievement', achievementSchema);
 
