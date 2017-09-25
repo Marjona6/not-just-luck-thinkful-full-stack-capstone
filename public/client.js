@@ -180,12 +180,13 @@ $(document).ready(function () {
 	// when user clicks WHY from home page
 	document.getElementById('the-why').addEventListener('click', function(event) {
 		$.getJSON('/achievements', function (res) {
+			let htmlContent = '';
 			for (let i=0; i<res.achievements.length; i++) {
 				if (res.achievements[i].achieveWhy !== undefined) {
-					let htmlContent = '<p>' + res.achievements[i].achieveWhy + '</p>';
-					$('#motivations').append(htmlContent);
+					htmlContent += '<p>' + res.achievements[i].achieveWhy + '</p>';
 				};
 			};
+			$('#motivations').html(htmlContent);
 		});
 		$('#user-home-page').hide();
 		$('#visual-how').hide();
@@ -220,7 +221,7 @@ $(document).ready(function () {
 				console.log(Object.keys(traitsObject)[i].toLowerCase());
 			}
 			console.log(htmlContent);
-			$('#traits').append(htmlContent);
+			$('#traits').html(htmlContent);
 			
 		});
 		$('#user-home-page').hide();
@@ -234,14 +235,20 @@ $(document).ready(function () {
 	// when user clicks WHEN from home page
 	document.getElementById('the-when').addEventListener('click', function(event) {
 		$.getJSON('/achievements', function (res) {
-			console.log(res.achievements)
+			let htmlContent = '';
 			for (let i=0; i<res.achievements.length; i++) {
-				console.log(res.achievements[i].achieveWhen);
-				let htmlContent = `<div class="timeline-item" date-is="${res.achievements[i].achieveWhen}"><h1>
-					${res.achievements[i].achieveWhat}</h1><p>${res.achievements[i].achieveWhy}</p></div>`;				
-				console.log(htmlContent);
-				$('.timeline-container').append(htmlContent);
+				let myUl = '<ul class="timeline-ul">';
+				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
+					myUl += `<li>${res.achievements[i].achieveHow[j]}</li>`;
+				};
+				myUl += '</ul>';
+				// let prettyAchieveHow = Object.values(res.achievements[i].achieveHow);
+				// console.log(prettyAchieveHow);
+				htmlContent += `<div class="timeline-item" date-is="${res.achievements[i].achieveWhen}"><h2>
+					${res.achievements[i].achieveWhat}</h2><p>${res.achievements[i].achieveWhy}</p>
+					<p>It took: ${myUl}</div>`;				
 			};
+			$('.timeline-container').html(htmlContent);
 		});
 		$('#user-home-page').hide();
 		$('#visual-how').hide();
@@ -254,12 +261,13 @@ $(document).ready(function () {
 	// when user clicks WHAT from home page
 	document.getElementById('the-what').addEventListener('click', function(event) {
 		$.getJSON('/achievements', function (res) {
+			let htmlContent = '';
 			for (let i=0; i<res.achievements.length; i++) {
 				if (res.achievements[i].achieveWhat !== undefined) {
-					let htmlContent = '<p>' + res.achievements[i].achieveWhat + '</p>';
-					$('#awesome-stuff').append(htmlContent);
+					htmlContent += '<p>' + res.achievements[i].achieveWhat + '</p>';
 				};
 			};
+			$('#awesome-stuff').html(htmlContent);
 		});
 		$('#user-home-page').hide();
 		$('#visual-how').hide();

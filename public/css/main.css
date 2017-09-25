@@ -303,11 +303,13 @@ main {
     padding: 2rem;
 }
 
+#motivations,
+#awesome-stuff,
 #traits {
     width: 75%;
     margin: 1rem auto 1rem auto;
     padding: 2rem;
-    border: 5px solid gray;
+    border: 5px solid #CCB241;
 }
 
 .size-1 {
