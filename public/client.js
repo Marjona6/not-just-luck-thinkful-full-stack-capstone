@@ -213,7 +213,10 @@ $(document).ready(function () {
 				contentType: 'application/json'
 			})
 			.done(function (result) {
+				// reset form back to empty
 				document.getElementById('input-form').reset();
+				// reset checkboxes back to unchecked
+				$('input:checkbox').removeAttr('checked');
 				showTimeline();
 			})
 			.fail(function (jqXHR, error, errorThrown) {
@@ -301,6 +304,8 @@ $(document).ready(function () {
 			console.log('got something');
 			// AJAX call to get the values of the achievement from the DB
 			$.getJSON('/achievements/' + achievementId, function(res) {
+				// set back warning toggle to true
+				backWarnToggle = true;
 				// add in pre-filled values based on achievement id
 				$('#achieve-what').val(res.achieveWhat);
 				$('#achieve-why').val(res.achieveWhy);
@@ -319,8 +324,9 @@ $(document).ready(function () {
 			$('#account-setup-page > h2').hide();
 			$('#js-back-button').show();
 			$('#account-setup-page').show();
-			// and add a delete button
 			$('#js-delete-button').show();
+			// set back warning toggle to false
+			backWarnToggle = false;
 
 			// when user clicks DELETE button from an edit screen
 			document.getElementById('js-delete-button').addEventListener('click', function(event) {
@@ -373,6 +379,10 @@ $(document).ready(function () {
 				$('#account-setup-page').hide();
 				$('#user-home-page').show();
 				backWarnToggle = false;
+				// reset form back to empty
+				document.getElementById('input-form').reset();
+				// reset checkboxes back to unchecked
+				$('input:checkbox').removeAttr('checked');
 			}
 		} else {
 			$('#visuals').hide();
@@ -386,4 +396,13 @@ $(document).ready(function () {
 
 // TODO:
 // add form validation for signin page
-// make achievements editable and deletable
+// add PUT functionality for editing achievements
+// fix ordering issues with timeline
+// fix datepicker
+// on signup page, focus on top of account setup page after signing up
+// put buttons together in a line?
+// make sure correct user is being sent (problems due to pre-filled?)
+// user should be able to add their own skills/traits to checkbox list
+// store dates as unix dates--how?
+// add date display format selection capability
+// 
