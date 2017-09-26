@@ -161,14 +161,14 @@ app.post('/achievements/create', (req, res) => {
         });
 });
 
-// accessing achievements: why
+// accessing all of a user's achievements
 app.get('/achievements', function (req, res) {
     Achievement
         .find()
         .then(function (achievements) {
             res.json({
                 achievements: achievements.map(function (achievement) {
-                    console.log(achievement);
+                    // console.log(achievement);
                     return achievement;
                 })
             });
@@ -177,6 +177,20 @@ app.get('/achievements', function (req, res) {
             console.error(err);
             res.status(500).json({
                 message: 'Internal server error'
+            });
+        });
+});
+
+// accessing a single achievement by id
+app.get('/achievements/:id', function (req, res) {
+    Achievement
+        .findById(req.params.id).exec().then(function (achievement) {
+            return res.json(achievement);
+        })
+        .catch(function (achievements) {
+            console.error(err);
+            res.status(500).json({
+                message: 'Internal Server Error'
             });
         });
 });

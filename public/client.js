@@ -36,7 +36,6 @@ function showTimeline() {
 // Triggers
 $(document).ready(function () {
 	// when page first loads
-	// var user = undefined;
 	var backWarnToggle = false;
 	var backToLandingPageToggle = false;
 	$('#signin-page').hide();
@@ -52,7 +51,6 @@ $(document).ready(function () {
 // USER FLOW 1: USER SIGNS UP FOR NEW ACCOUNT
 	document.getElementById('js-new-account').addEventListener('click', function(event) {
 		const form = document.body.querySelector('#new-account-form');
-		// fix issue with html5 validation
 		if (form.checkValidity && !form.checkValidity()) {
 			console.log('validity has been checked');
 			return;
@@ -190,6 +188,7 @@ $(document).ready(function () {
 				};
 			};
 			console.log(achHow);
+		// datepicker not currently working
 		$("#datepicker").datepicker({
         	numberOfMonths: 2,
         	showButtonPanel: true
@@ -214,7 +213,6 @@ $(document).ready(function () {
 				contentType: 'application/json'
 			})
 			.done(function (result) {
-				//event.preventDefault();
 				document.getElementById('input-form').reset();
 				showTimeline();
 			})
@@ -292,35 +290,6 @@ $(document).ready(function () {
 
 	// when user clicks WHEN from home page
 	document.getElementById('the-when').addEventListener('click', function(event) {
-		// function showTimeline() {
-		// 	$('#account-setup-page').hide();
-		// 	$('#user-home-page').hide();
-		// 	$('#js-delete-button').hide();
-		// 	$('#visual-how').hide();
-		// 	$('#visual-what').hide();
-		// 	$('#visual-why').hide();
-		// 	$('#js-back-button').show();
-		// 	$('#visuals').show();
-		// 	$('#visual-when').show();
-		// 	$.getJSON('/achievements', function (res) {
-		// 		let htmlContent = '';
-		// 		for (let i=0; i<res.achievements.length; i++) {
-		// 			if (res.achievements[i].user === user) {
-		// 				let myUl = '<ul class="timeline-ul">';
-		// 				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
-		// 					myUl += `<li>${res.achievements[i].achieveHow[j]}</li>`;
-		// 				};
-		// 				myUl += '</ul>';
-		// 				htmlContent += `<div class="timeline-item" date-is="${res.achievements[i].achieveWhen}">
-		// 					<a href="#" class="js-get-achievement" id="${res.achievements[i]._id}"><h2>
-		// 					${res.achievements[i].achieveWhat}</h2></a>
-		// 					<p>${res.achievements[i].achieveWhy}</p>
-		// 					<p>It took: ${myUl}</div>`;	
-		// 				};			
-		// 		};
-		// 		$('.timeline-container').html(htmlContent);
-		// 	});
-		// }
 		event.preventDefault();
 		showTimeline();
 
@@ -330,13 +299,26 @@ $(document).ready(function () {
 			console.log(event.target.parentNode.id);
 			const achievementId = event.target.parentNode.id;
 			console.log('got something');
+			// AJAX call to get the values of the achievement from the DB
+			$.getJSON('/achievements/' + achievementId, function(res) {
+				// add in pre-filled values based on achievement id
+				$('#achieve-what').val(res.achieveWhat);
+				$('#achieve-why').val(res.achieveWhy);
+				$('#datepicker').val(res.achieveWhen);
+				// for loop
+				for (let i=0; i<res.achieveHow.length; i++) {
+					$('input[value="' + res.achieveHow[i] + '"]').attr('checked', 'checked');
+				}
+			});
+			// hide and show
 			$('#visual-when').hide();
 			$('#visuals').hide();
 			$('#account-setup-blurb').hide();
 			$('#add-new-blurb').hide();
 			$('#add-details').hide();
+			$('#account-setup-page > h2').hide();
 			$('#js-back-button').show();
-			$('#account-setup-page').show(); // need to add in pre-filled values here
+			$('#account-setup-page').show();
 			// and add a delete button
 			$('#js-delete-button').show();
 
