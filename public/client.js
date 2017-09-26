@@ -2,8 +2,11 @@
 
 // Function and object definitions
 var user = undefined;
+var editToggle = false;
+console.log(editToggle);
 
 function showTimeline() {
+	console.log('running function showTimeline');
 	$('#account-setup-page').hide();
 	$('#user-home-page').hide();
 	$('#js-delete-button').hide();
@@ -31,6 +34,10 @@ function showTimeline() {
 		};
 		$('.timeline-container').html(htmlContent);
 	});
+	// reset form back to empty
+	document.getElementById('input-form').reset();
+	// reset checkboxes back to unchecked
+	$('input:checkbox').removeAttr('checked');
 }
 
 // Triggers
@@ -170,62 +177,6 @@ $(document).ready(function () {
 		$('#js-back-button').show();
 	});
 
-	// when user clicks I Did This button from #account-setup-page
-	document.getElementById('js-submit-accomplishment').addEventListener('click', function(event) {
-		event.preventDefault();
-		backWarnToggle = false;
-		// AJAX call to send the form data up to the server/DB
-		// take values from form inputs
-		const achWhat = $('input[id="achieve-what"]').val();
-		console.log(achWhat);
-		var achHow = [];
-			// add all the cb values to the array achHow
-			var cbElements = $('input[type=checkbox]');
-			for (let i=0; i < cbElements.length; i++) {
-				if ($(cbElements[i]).is(':checked')) {
-					console.log(cbElements[i].value);
-					achHow.push(cbElements[i].value);
-				};
-			};
-			console.log(achHow);
-		// datepicker not currently working
-		$("#datepicker").datepicker({
-        	numberOfMonths: 2,
-        	showButtonPanel: true
-    	});
-		const achWhen = $('input[id="datepicker"]').val();
-		console.log(achWhen);
-		const achWhy = $('input[id="achieve-why"]').val();
-		console.log(achWhy);
-		console.log('user is ' + user);
-		const newAchObject = {
-			user: user,
-			achieveWhat: achWhat,
-			achieveHow: achHow,
-			achieveWhen: achWhen,
-			achieveWhy: achWhy
-		};
-		$.ajax({
-				type: 'POST',
-				url: 'achievements/create',
-				dataType: 'json',
-				data: JSON.stringify(newAchObject),
-				contentType: 'application/json'
-			})
-			.done(function (result) {
-				// reset form back to empty
-				document.getElementById('input-form').reset();
-				// reset checkboxes back to unchecked
-				$('input:checkbox').removeAttr('checked');
-				showTimeline();
-			})
-			.fail(function (jqXHR, error, errorThrown) {
-	            console.log(jqXHR);
-	            console.log(error);
-	            console.log(errorThrown);
-			});
-	});
-
 // when user clicks how/what/when/why links from home page
 	// when user clicks WHY from home page
 	document.getElementById('the-why').addEventListener('click', function(event) {
@@ -293,15 +244,18 @@ $(document).ready(function () {
 
 	// when user clicks WHEN from home page
 	document.getElementById('the-when').addEventListener('click', function(event) {
+		console.log('clicked the when');
 		event.preventDefault();
 		showTimeline();
 
 		// when user clicks on an achievement heading from the timeline, takes user to edit screen for that achievement
 		$(document).on('click', '.js-get-achievement', function(event) {
+			console.log('clicked js get achievement');
 			event.preventDefault();
+			editToggle = true;
+			console.log(editToggle);
 			console.log(event.target.parentNode.id);
 			const achievementId = event.target.parentNode.id;
-			console.log('got something');
 			// AJAX call to get the values of the achievement from the DB
 			$.getJSON('/achievements/' + achievementId, function(res) {
 				// set back warning toggle to true
@@ -312,7 +266,8 @@ $(document).ready(function () {
 				$('#datepicker').val(res.achieveWhen);
 				// for loop
 				for (let i=0; i<res.achieveHow.length; i++) {
-					$('input[value="' + res.achieveHow[i] + '"]').attr('checked', 'checked');
+					console.log(res.achieveHow[i]);
+					$('input[value="' + res.achieveHow[i] + '"]').prop('checked', 'checked');
 				}
 			});
 			// hide and show
@@ -325,9 +280,83 @@ $(document).ready(function () {
 			$('#js-back-button').show();
 			$('#account-setup-page').show();
 			$('#js-delete-button').show();
-			// set back warning toggle to false
+			// reset back warning and edit toggles to false
 			backWarnToggle = false;
+			// editToggle = false;
+			console.log(editToggle);
 
+			// when user clicks I Did This button from #account-setup-page
+			document.getElementById('js-submit-accomplishment').addEventListener('click', function(event) {
+				event.preventDefault();
+				backWarnToggle = false;
+				// AJAX call to send the form data up to the server/DB
+				// take values from form inputs
+				const achWhat = $('input[id="achieve-what"]').val();
+				console.log(achWhat);
+				var achHow = [];
+					// add all the cb values to the array achHow
+					var cbElements = $('input[type=checkbox]');
+					for (let i=0; i < cbElements.length; i++) {
+						if ($(cbElements[i]).is(':checked')) {
+							console.log(cbElements[i].value);
+							achHow.push(cbElements[i].value);
+						};
+					};
+					console.log(achHow);
+				// datepicker not currently working
+				$("#datepicker").datepicker({
+		        	numberOfMonths: 2,
+		        	showButtonPanel: true
+		    	});
+				const achWhen = $('input[id="datepicker"]').val();
+				console.log(achWhen);
+				const achWhy = $('input[id="achieve-why"]').val();
+				console.log(achWhy);
+				console.log('user is ' + user);
+				const newAchObject = {
+					user: user,
+					achieveWhat: achWhat,
+					achieveHow: achHow,
+					achieveWhen: achWhen,
+					achieveWhy: achWhy
+				};
+				console.log('about to check truth or falsehood of editToggle for ajax call');
+				if (editToggle === false) {
+					$.ajax({
+							type: 'POST',
+							url: 'achievements/create',
+							dataType: 'json',
+							data: JSON.stringify(newAchObject),
+							contentType: 'application/json'
+						})
+						.done(function (result) {
+							showTimeline();
+						})
+						.fail(function (jqXHR, error, errorThrown) {
+				            console.log(jqXHR);
+				            console.log(error);
+				            console.log(errorThrown);
+						});
+				} else if (editToggle === true) {
+					$.ajax({
+							type: 'PUT',
+							url: 'achievements/' + achievementId,
+							dataType: 'json',
+							data: JSON.stringify(newAchObject),
+							contentType: 'application/json'
+						})
+						.done(function (result) {
+							showTimeline();
+							editToggle = false;
+							console.log(editToggle);
+						})
+						.fail(function (jqXHR, error, errorThrown) {
+				            console.log(jqXHR);
+				            console.log(error);
+				            console.log(errorThrown);
+						});
+				};
+			});
 			// when user clicks DELETE button from an edit screen
 			document.getElementById('js-delete-button').addEventListener('click', function(event) {
 				event.preventDefault();
@@ -368,21 +397,14 @@ $(document).ready(function () {
 
 	// when user clicks Back button from any of the visuals
 	document.getElementById('js-back-button').addEventListener('click', function(event) {
+		console.log('clicked js back button');
 		if (backToLandingPageToggle === true) {
 			location.reload();
 		} else if (backWarnToggle === true) {
 			event.preventDefault();
 			if (confirm('Are you sure you want to go back? Your changes will not be saved.') == true) {
-				$('#visuals').hide();
-				$('#js-back-button').hide();
-				$('#js-delete-button').hide();
-				$('#account-setup-page').hide();
-				$('#user-home-page').show();
+				showTimeline();
 				backWarnToggle = false;
-				// reset form back to empty
-				document.getElementById('input-form').reset();
-				// reset checkboxes back to unchecked
-				$('input:checkbox').removeAttr('checked');
 			}
 		} else {
 			$('#visuals').hide();

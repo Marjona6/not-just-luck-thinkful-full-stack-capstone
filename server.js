@@ -16,6 +16,7 @@ app.use(express.static('public'));
 
 mongoose.Promise = global.Promise;
 
+ // ---------------- RUN/CLOSE SERVER -----------------------------------------------------
 let server = undefined;
 
 function runServer() {
@@ -52,6 +53,7 @@ function closeServer() {
 }
 
 // ---------------USER ENDPOINTS-------------------------------------
+// POST -----------------------------------
 // creating a new user
 app.post('/users/create', (req, res) => {
     let username = req.body.username;
@@ -129,6 +131,7 @@ app.post('/signin', function (req, res) {
 
 
 // -------------ACHIEVEMENT ENDPOINTS------------------------------------------------
+// POST -----------------------------------------
 // creating a new achievement
 app.post('/achievements/create', (req, res) => {
     console.log(req.body);
@@ -137,8 +140,6 @@ app.post('/achievements/create', (req, res) => {
     let achieveHow = req.body.achieveHow;
     let achieveWhy = req.body.achieveWhy;
     let achieveWhen = moment(req.body.achieveWhen).format('MMM-DD-YYYY');
-    // the moment formatting does not seem to be working; correctly console.logs in terminal
-    // but does not send correctly formatted date to DB
     console.log(achieveWhen);
     let user = req.body.user;
     
@@ -161,6 +162,28 @@ app.post('/achievements/create', (req, res) => {
         });
 });
 
+// PUT --------------------------------------
+app.put('/achievements/:id', function (req, res) {
+    let toUpdate = {};
+    let updateableFields = ['achieveWhat', 'achieveHow', 'achieveWhen', 'achieveWhy'];
+    updateableFields.forEach(function(field) {
+        if (field in req.body) {
+            toUpdate[field] = req.body[field];
+        }
+    });
+    Achievement
+        .findByIdAndUpdate(req.params.id, {
+            $set: toUpdate
+        }).exec().then(function(achievement) {
+            return res.status(204).end();
+        }).catch(function(err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        });
+});
+
+// GET ------------------------------------
 // accessing all of a user's achievements
 app.get('/achievements', function (req, res) {
     Achievement
@@ -195,12 +218,7 @@ app.get('/achievements/:id', function (req, res) {
         });
 });
 
-// accessing achievements: what
-
-// accessing achievements: when
-
-// accessing achievements: how
-
+// DELETE ----------------------------------------
 // deleting an achievement by id
 app.delete('/achievements/:id', function(req, res) {
     Achievement.findByIdAndRemove(req.params.id).exec().then(function(achievement) {
@@ -212,7 +230,7 @@ app.delete('/achievements/:id', function(req, res) {
     });
 });
 
-
+// MISC ------------------------------------------
 // catch-all endpoint if client makes request to non-existent endpoint
 app.use('*', (req, res) => {
     res.status(404).json({
