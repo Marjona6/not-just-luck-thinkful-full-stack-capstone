@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/timeline.css">
+    <link re="stylesheet" href="css/jquery-ui.css">
     <link rel="stylesheet" href="css/main.css">
     <!-- Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Crimson+Text|Montserrat" rel="stylesheet">
@@ -79,12 +80,14 @@
     		<div id="add-new-blurb">
     			<p>Let's add another achievement to your list!</p>
     		</div>
+            <div id="add-details">
     			<p>First, think of something you've accomplished that you're particularly proud of. What did you do? What skills did you use?</p>
     			<p>Finally, think about why this accomplishment is meaningful to you. Did you help someone? Make a difference? Do something everyone told you you could never do?</p>
-    		<form>
+            </div>
+    		<form id="input-form">
     			<h3>What did you achieve?</h3>
     				<p>Briefly describe your big achievement.</p>
-    				<input id="achieve-what" type="text">
+    				<input id="achieve-what" type="text" placeholder="I built a schoolhouse.">
     			<h3>How did you achieve it?</h3>
 	    			<p>What specific skills or character traits did you draw on?</p>
 	    			<fieldset>
@@ -118,10 +121,11 @@
 		    		</fieldset>
     			<h3>When did you achieve it?</h3>
     				<p>A rough estimate is fine here.</p>
-    					<input id="achieve-when" type="date">
+                        <input type="text" id="datepicker" placeholder="Date of your accomplishment">
+    					<!-- <input id="achieve-when" type="date"> -->
     			<h3>Why is it meaningful to you?</h3>
     				<p>Why is this accomplishment something you feel proud of?</p>
-    				<input id="achieve-why" type="textarea">
+    				<input id="achieve-why" type="textarea" placeholder="I helped people in need.">
 	    		<input type="submit" id="js-submit-accomplishment" class="my-buttons" value="I Did This!">
 	    	</form>
     	</section>
@@ -167,7 +171,7 @@
     		</div>
     		<div id="visual-when">
     			<h3>WHEN?</h3>
-    			<p>Take a look at this timeline.</p>
+    			<p>Take a look at all the awesome stuff you've achieved!</p>
 
 				<div class="timeline-container">
 					
@@ -194,8 +198,9 @@
 					
 				</div>
     		</div>
-            <input type="submit" id="js-back-button" class="my-buttons" value="Back" />
-    	</section>
+        </section>
+        <input type="submit" id="js-back-button" class="my-buttons" value="Back" />
+        <input type="submit" id="js-delete-button" class="my-buttons" value="Delete This Achievement" />
     </main>
     <footer>
     	<ul>
@@ -206,6 +211,8 @@
         </ul>
     </footer>
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="js/jquery-2.2.3.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
     <script src="client.js" type="text/javascript"></script>
 </body>
 </html>

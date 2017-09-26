@@ -1,16 +1,51 @@
 "use strict";
 
 // Function and object definitions
+var user = undefined;
+
+function showTimeline() {
+	$('#account-setup-page').hide();
+	$('#user-home-page').hide();
+	$('#js-delete-button').hide();
+	$('#visual-how').hide();
+	$('#visual-what').hide();
+	$('#visual-why').hide();
+	$('#js-back-button').show();
+	$('#visuals').show();
+	$('#visual-when').show();
+	$.getJSON('/achievements', function (res) {
+		let htmlContent = '';
+		for (let i=0; i<res.achievements.length; i++) {
+			if (res.achievements[i].user === user) {
+				let myUl = '<ul class="timeline-ul">';
+				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
+					myUl += `<li>${res.achievements[i].achieveHow[j]}</li>`;
+				};
+				myUl += '</ul>';
+				htmlContent += `<div class="timeline-item" date-is="${res.achievements[i].achieveWhen}">
+					<a href="#" class="js-get-achievement" id="${res.achievements[i]._id}"><h2>
+					${res.achievements[i].achieveWhat}</h2></a>
+					<p>${res.achievements[i].achieveWhy}</p>
+					<p>It took: ${myUl}</div>`;	
+				};			
+		};
+		$('.timeline-container').html(htmlContent);
+	});
+}
 
 // Triggers
 $(document).ready(function () {
 	// when page first loads
-	var user = undefined;
+	// var user = undefined;
+	var backWarnToggle = false;
+	var backToLandingPageToggle = false;
 	$('#signin-page').hide();
 	$('#account-setup-page').hide();
 	$('#user-home-page').hide();
 	$('#visuals').hide();
 	$('#js-signout-link').hide();
+	$('#js-back-button').hide();
+	$('#js-delete-button').hide();
 	$('#landing-page').show();
 	$('#account-signup-page').show();
 
@@ -50,6 +85,8 @@ $(document).ready(function () {
 				$('#landing-page').hide();
 				$('#account-signup-page').hide();
 				$('#add-new-blurb').hide();
+				$('#js-signin-link').hide();
+				$('#js-signout-link').show();
 				$('#account-setup-blurb').show();
 				$('#account-setup-page').show();
 			})
@@ -67,15 +104,19 @@ $(document).ready(function () {
 	// when user clicks sign-in link in header
 	document.getElementById('js-signin-link').addEventListener('click', function(event) {
 		event.preventDefault();
+		backToLandingPageToggle = true;
 		$('#landing-page').hide();
 		$('#account-signup-page').hide();
 		$('#js-signin-link').hide();
+		$('#js-delete-button').hide();
+		$('#js-back-button').show();
 		$('#signin-page').show();
 	});
 
 	// when user clicks sign-in button from #signin-page
 	document.getElementById('js-signin-button').addEventListener('click', function(event) {
 		event.preventDefault();
+		backToLandingPageToggle = false;
 		// AJAX call to validate login info and sign user in
 		const inputUname = $('input[name="signin-uname"]').val();
 		const inputPw = $('input[name="signin-pw"]').val();
@@ -100,6 +141,8 @@ $(document).ready(function () {
 	            })
 	            .done(function (result) {
 	            	$('#signin-page').hide();
+	            	$('#js-back-button').hide();
+	            	$('#js-delete-button').hide();
 					$('#user-home-page').show();
 					$('#js-signout-link').show();
 	        	})
@@ -114,22 +157,25 @@ $(document).ready(function () {
 
 	// when user clicks sign-out link in header
 	document.getElementById('js-signout-link').addEventListener('click', function(event) {
-		console.log('signed out');
 		location.reload();
 	});
 
 	// when user clicks Add Accomplishment button from #user-home-page
 	document.getElementById('js-add-accomplishment').addEventListener('click', function(event) {
 		event.preventDefault();
+		backWarnToggle = true;
 		$('#user-home-page').hide();
 		$('#account-setup-blurb').hide();
+		$('#js-delete-button').hide();
 		$('#add-new-blurb').show();
 		$('#account-setup-page').show();
+		$('#js-back-button').show();
 	});
 
 	// when user clicks I Did This button from #account-setup-page
 	document.getElementById('js-submit-accomplishment').addEventListener('click', function(event) {
 		event.preventDefault();
+		backWarnToggle = false;
 		// AJAX call to send the form data up to the server/DB
 		// take values from form inputs
 		const achWhat = $('input[id="achieve-what"]').val();
@@ -144,7 +190,11 @@ $(document).ready(function () {
 				};
 			};
 			console.log(achHow);
-		const achWhen = $('input[id="achieve-when"]').val();
+		$("#datepicker").datepicker({
+        	numberOfMonths: 2,
+        	showButtonPanel: true
+    	});
+		const achWhen = $('input[id="datepicker"]').val();
 		console.log(achWhen);
 		const achWhy = $('input[id="achieve-why"]').val();
 		console.log(achWhy);
@@ -164,10 +214,9 @@ $(document).ready(function () {
 				contentType: 'application/json'
 			})
 			.done(function (result) {
-				event.preventDefault();
-				console.log('add accomplishment done function working');
-				$('#account-setup-page').hide();
-				$('#user-home-page').show();
+				//event.preventDefault();
+				document.getElementById('input-form').reset();
+				showTimeline();
 			})
 			.fail(function (jqXHR, error, errorThrown) {
 	            console.log(jqXHR);
@@ -182,8 +231,10 @@ $(document).ready(function () {
 		$.getJSON('/achievements', function (res) {
 			let htmlContent = '';
 			for (let i=0; i<res.achievements.length; i++) {
-				if (res.achievements[i].achieveWhy !== undefined) {
-					htmlContent += '<p>' + res.achievements[i].achieveWhy + '</p>';
+				if (res.achievements[i].user === user) {
+					if (res.achievements[i].achieveWhy !== undefined) {
+						htmlContent += '<p>' + res.achievements[i].achieveWhy + '</p>';
+					};
 				};
 			};
 			$('#motivations').html(htmlContent);
@@ -193,6 +244,8 @@ $(document).ready(function () {
 		$('#visual-what').hide();
 		$('#visual-when').hide();
 		$('#visuals').show();
+		$('#js-delete-button').hide();
+		$('#js-back-button').show();
 		$('#visual-why').show();
 	});
 
@@ -201,14 +254,17 @@ $(document).ready(function () {
 		$.getJSON('/achievements', function (res) {
 			let traitsObject = {};
 			for (let i=0; i<res.achievements.length; i++) {
-				// need to loop through each res.achievements[i].achieveHow array and add up the total of each trait
-				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
-					if (res.achievements[i].achieveHow[j] in traitsObject) {
-						// if the trait already exists in the object, increase its value by 1 (1 instance)
-						traitsObject[res.achievements[i].achieveHow[j]] += 1;
-					} else {
-						// if the trait does not exist in the object already, add it with value of 1 (1 instance)
-						traitsObject[res.achievements[i].achieveHow[j]]	= 1;
+				// make sure to only get those belonging to the signed-in user
+				if (res.achievements[i].user === user) {
+					// need to loop through each res.achievements[i].achieveHow array and add up the total of each trait
+					for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
+						if (res.achievements[i].achieveHow[j] in traitsObject) {
+							// if the trait already exists in the object, increase its value by 1 (1 instance)
+							traitsObject[res.achievements[i].achieveHow[j]] += 1;
+						} else {
+							// if the trait does not exist in the object already, add it with value of 1 (1 instance)
+							traitsObject[res.achievements[i].achieveHow[j]]	= 1;
+						};
 					};
 				};
 			};
@@ -228,43 +284,86 @@ $(document).ready(function () {
 		$('#visual-why').hide();
 		$('#visual-what').hide();
 		$('#visual-when').hide();
+		$('#js-delete-button').hide();
 		$('#visuals').show();
+		$('#js-back-button').show();
 		$('#visual-how').show();
 	});
 
 	// when user clicks WHEN from home page
 	document.getElementById('the-when').addEventListener('click', function(event) {
-		$.getJSON('/achievements', function (res) {
-			let htmlContent = '';
-			for (let i=0; i<res.achievements.length; i++) {
-				let myUl = '<ul class="timeline-ul">';
-				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
-					myUl += `<li>${res.achievements[i].achieveHow[j]}</li>`;
-				};
-				myUl += '</ul>';
-				// let prettyAchieveHow = Object.values(res.achievements[i].achieveHow);
-				// console.log(prettyAchieveHow);
-				htmlContent += `<div class="timeline-item" date-is="${res.achievements[i].achieveWhen}"><h2>
-					${res.achievements[i].achieveWhat}</h2><p>${res.achievements[i].achieveWhy}</p>
-					<p>It took: ${myUl}</div>`;				
-			};
-			$('.timeline-container').html(htmlContent);
+		// function showTimeline() {
+		// 	$('#account-setup-page').hide();
+		// 	$('#user-home-page').hide();
+		// 	$('#js-delete-button').hide();
+		// 	$('#visual-how').hide();
+		// 	$('#visual-what').hide();
+		// 	$('#visual-why').hide();
+		// 	$('#js-back-button').show();
+		// 	$('#visuals').show();
+		// 	$('#visual-when').show();
+		// 	$.getJSON('/achievements', function (res) {
+		// 		let htmlContent = '';
+		// 		for (let i=0; i<res.achievements.length; i++) {
+		// 			if (res.achievements[i].user === user) {
+		// 				let myUl = '<ul class="timeline-ul">';
+		// 				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
+		// 					myUl += `<li>${res.achievements[i].achieveHow[j]}</li>`;
+		// 				};
+		// 				myUl += '</ul>';
+		// 				htmlContent += `<div class="timeline-item" date-is="${res.achievements[i].achieveWhen}">
+		// 					<a href="#" class="js-get-achievement" id="${res.achievements[i]._id}"><h2>
+		// 					${res.achievements[i].achieveWhat}</h2></a>
+		// 					<p>${res.achievements[i].achieveWhy}</p>
+		// 					<p>It took: ${myUl}</div>`;	
+		// 				};			
+		// 		};
+		// 		$('.timeline-container').html(htmlContent);
+		// 	});
+		// }
+		event.preventDefault();
+		showTimeline();
+
+		// when user clicks on an achievement heading from the timeline, takes user to edit screen for that achievement
+		$(document).on('click', '.js-get-achievement', function(event) {
+			event.preventDefault();
+			console.log(event.target.parentNode.id);
+			const achievementId = event.target.parentNode.id;
+			console.log('got something');
+			$('#visual-when').hide();
+			$('#visuals').hide();
+			$('#account-setup-blurb').hide();
+			$('#add-new-blurb').hide();
+			$('#add-details').hide();
+			$('#js-back-button').show();
+			$('#account-setup-page').show(); // need to add in pre-filled values here
+			// and add a delete button
+			$('#js-delete-button').show();
+
+			// when user clicks DELETE button from an edit screen
+			document.getElementById('js-delete-button').addEventListener('click', function(event) {
+				event.preventDefault();
+				if (confirm('Are you SURE you want to delete this awesome accomplishment? Your data will be PERMANENTLY erased.') === true) {
+					$.ajax({
+						method: 'DELETE',
+						url: '/achievements/' + achievementId,
+						success: showTimeline //some function
+					});
+				}
+			});
 		});
-		$('#user-home-page').hide();
-		$('#visual-how').hide();
-		$('#visual-what').hide();
-		$('#visual-why').hide();
-		$('#visuals').show();
-		$('#visual-when').show();
 	});
+		
 
 	// when user clicks WHAT from home page
 	document.getElementById('the-what').addEventListener('click', function(event) {
 		$.getJSON('/achievements', function (res) {
 			let htmlContent = '';
 			for (let i=0; i<res.achievements.length; i++) {
-				if (res.achievements[i].achieveWhat !== undefined) {
-					htmlContent += '<p>' + res.achievements[i].achieveWhat + '</p>';
+				if (res.achievements[i].user === user) {
+					if (res.achievements[i].achieveWhat !== undefined) {
+						htmlContent += '<p>' + res.achievements[i].achieveWhat + '</p>';
+					};
 				};
 			};
 			$('#awesome-stuff').html(htmlContent);
@@ -273,18 +372,36 @@ $(document).ready(function () {
 		$('#visual-how').hide();
 		$('#visual-why').hide();
 		$('#visual-when').hide();
+		$('#js-delete-button').hide();
 		$('#visuals').show();
+		$('#js-back-button').show();
 		$('#visual-what').show();
 	});
 
 	// when user clicks Back button from any of the visuals
 	document.getElementById('js-back-button').addEventListener('click', function(event) {
-		$('#visuals').hide();
-		$('#user-home-page').show();
+		if (backToLandingPageToggle === true) {
+			location.reload();
+		} else if (backWarnToggle === true) {
+			event.preventDefault();
+			if (confirm('Are you sure you want to go back? Your changes will not be saved.') == true) {
+				$('#visuals').hide();
+				$('#js-back-button').hide();
+				$('#js-delete-button').hide();
+				$('#account-setup-page').hide();
+				$('#user-home-page').show();
+				backWarnToggle = false;
+			}
+		} else {
+			$('#visuals').hide();
+			$('#js-back-button').hide();
+			$('#js-delete-button').hide();
+			$('#account-setup-page').hide();
+			$('#user-home-page').show();
+		};
 	});
 });
 
 // TODO:
-// add AJAX calls and server functionality (finish this--done?)
-// hook up DB
 // add form validation for signin page
+// make achievements editable and deletable
