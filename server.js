@@ -139,7 +139,7 @@ app.post('/achievements/create', (req, res) => {
     achieveWhat = achieveWhat.trim();
     let achieveHow = req.body.achieveHow;
     let achieveWhy = req.body.achieveWhy;
-    let achieveWhen = moment(req.body.achieveWhen).format('MMM-DD-YYYY');
+    let achieveWhen = req.body.achieveWhen;
     console.log(achieveWhen);
     let user = req.body.user;
     

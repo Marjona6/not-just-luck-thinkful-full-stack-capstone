@@ -3,10 +3,128 @@
 // Function and object definitions
 var user = undefined;
 var editToggle = false;
-console.log(editToggle);
+var backWarnToggle = false;
+var backToLandingPageToggle = false;
+var newUserToggle = false;
+
+function submitNewAccomplishment(user) {
+	event.preventDefault();
+	backWarnToggle = false;
+	console.log(backWarnToggle);
+	// AJAX call to send the form data up to the server/DB
+	// take values from form inputs
+	const achWhat = $('input[id="achieve-what"]').val();
+	console.log(achWhat);
+	var achHow = [];
+		// add all the cb values to the array achHow
+		var cbElements = $('input[type=checkbox]');
+		for (let i=0; i < cbElements.length; i++) {
+			if ($(cbElements[i]).is(':checked')) {
+				console.log(cbElements[i].value);
+				achHow.push(cbElements[i].value);
+			};
+		};
+		console.log(achHow);
+	var achWhen = $('input[id="datepicker"]').val();
+	console.log(achWhen + ' is achWhen value before changing to epoch format');
+	achWhen = Date.parse(achWhen);
+	console.log(achWhen + ' after parsing');
+	const achWhy = $('input[id="achieve-why"]').val();
+	console.log(achWhy);
+	console.log('user is ' + user);
+	const newAchObject = {
+		user: user,
+		achieveWhat: achWhat,
+		achieveHow: achHow,
+		achieveWhen: achWhen,
+		achieveWhy: achWhy
+	};
+	console.log('about to check truth or falsehood of editToggle for ajax call');
+	if (editToggle === false) {
+		$.ajax({
+				type: 'POST',
+				url: 'achievements/create',
+				dataType: 'json',
+				data: JSON.stringify(newAchObject),
+				contentType: 'application/json'
+			})
+			.done(function (result) {
+				showTimeline();
+			})
+			.fail(function (jqXHR, error, errorThrown) {
+	            console.log(jqXHR);
+	            console.log(error);
+	            console.log(errorThrown);
+			});
+	} else if (editToggle === true) {
+		$.ajax({
+				type: 'PUT',
+				url: 'achievements/' + achievementId,
+				dataType: 'json',
+				data: JSON.stringify(newAchObject),
+				contentType: 'application/json'
+			})
+			.done(function (result) {
+				showTimeline();
+				editToggle = false;
+				console.log(editToggle);
+			})
+			.fail(function (jqXHR, error, errorThrown) {
+	            console.log(jqXHR);
+	            console.log(error);
+	            console.log(errorThrown);
+			});
+	};
+}
+
+// can't seem to use--asynchronicity is ruining the world
+function getUserAchievements(user) {
+	console.log('user is ' + user);
+	let achArray = [];
+	$.getJSON('achievements', function(res) {
+		for (let i=0; i<res.achievements.length; i++) {
+			if (res.achievements[i].user === user) {
+				achArray.push(res.achievements[i]);
+			};
+		};
+	});
+	console.log(achArray);
+	return achArray;
+}
+
+function showSignInPage() {
+	backToLandingPageToggle = true;
+	$('#landing-page').hide();
+	$('#account-signup-page').hide();
+	$('#js-signin-link').hide();
+	$('#js-delete-button').hide();
+	$('#js-back-button').show();
+	$('#signin-page').show();
+}
+
+function showAddPage() {
+	$('*').scrollTop(0);
+	$('#landing-page').hide();
+	$('#account-signup-page').hide();
+	$('#add-new-blurb').hide();
+	$('#js-signin-link').hide();
+	$('#js-signout-link').show();
+	$('#account-setup-blurb').show();
+	$('#account-setup-page').show();
+}
+
+function showHomePage() {
+	$('#visuals').hide();
+	$('#js-back-button').hide();
+	$('#js-delete-button').hide();
+	$('#account-setup-page').hide();
+	$('#user-home-page').show();
+}
 
 function showTimeline() {
 	console.log('running function showTimeline');
+	backWarnToggle = false;
+	console.log(backWarnToggle);
 	$('#account-setup-page').hide();
 	$('#user-home-page').hide();
 	$('#js-delete-button').hide();
@@ -18,7 +136,10 @@ function showTimeline() {
 	$('#visual-when').show();
 	$.getJSON('/achievements', function (res) {
 		let htmlContent = '';
+		//console.log(getUserAchievements(user)[0]);
+		//let testArray = getUserAchievements(user);
 		for (let i=0; i<res.achievements.length; i++) {
+			//console.log(testArray[i]);
 			if (res.achievements[i].user === user) {
 				let myUl = '<ul class="timeline-ul">';
 				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
@@ -43,8 +164,9 @@ function showTimeline() {
 // Triggers
 $(document).ready(function () {
 	// when page first loads
-	var backWarnToggle = false;
-	var backToLandingPageToggle = false;
+	$('*').scrollTop(0);
+	// backWarnToggle = false;
+	backToLandingPageToggle = false;
 	$('#signin-page').hide();
 	$('#account-setup-page').hide();
 	$('#user-home-page').hide();
@@ -76,7 +198,8 @@ $(document).ready(function () {
 				username: uname,
 				password: pw
 			};
-			user = uname;
+			// will assign a value to variable 'user' in signin step below
+			// user = uname;
 			// AJAX call to send form data up to server/DB and create new user
 			$.ajax({
 				type: 'POST',
@@ -87,13 +210,16 @@ $(document).ready(function () {
 			})
 			.done(function (result) {
 				event.preventDefault();
-				$('#landing-page').hide();
-				$('#account-signup-page').hide();
-				$('#add-new-blurb').hide();
-				$('#js-signin-link').hide();
-				$('#js-signout-link').show();
-				$('#account-setup-blurb').show();
-				$('#account-setup-page').show();
+				newUserToggle = true;
+				alert('Thanks for signing up! You may now sign in with your username and password.');
+				showSignInPage();
+				// $('#landing-page').hide();
+				// $('#account-signup-page').hide();
+				// $('#add-new-blurb').hide();
+				// $('#js-signin-link').hide();
+				// $('#js-signout-link').show();
+				// $('#account-setup-blurb').show();
+				// $('#account-setup-page').show();
 			})
 			.fail(function (jqXHR, error, errorThrown) {
 	            console.log(jqXHR);
@@ -106,19 +232,22 @@ $(document).ready(function () {
 	
 
 // USER FLOW 2: USER WITH ACCOUNT SIGNS IN
+// users signing up for new accounts should be routed into this flow to keep everything inside a single user flow
 	// when user clicks sign-in link in header
 	document.getElementById('js-signin-link').addEventListener('click', function(event) {
 		event.preventDefault();
-		backToLandingPageToggle = true;
-		$('#landing-page').hide();
-		$('#account-signup-page').hide();
-		$('#js-signin-link').hide();
-		$('#js-delete-button').hide();
-		$('#js-back-button').show();
-		$('#signin-page').show();
+		showSignInPage();
+		// backToLandingPageToggle = true;
+		// $('#landing-page').hide();
+		// $('#account-signup-page').hide();
+		// $('#js-signin-link').hide();
+		// $('#js-delete-button').hide();
+		// $('#js-back-button').show();
+		// $('#signin-page').show();
 	});
 
 	// when user clicks sign-in button from #signin-page
+	// EVERYTHING MEATY GOES INSIDE HERE
 	document.getElementById('js-signin-button').addEventListener('click', function(event) {
 		event.preventDefault();
 		backToLandingPageToggle = false;
@@ -127,7 +256,7 @@ $(document).ready(function () {
 		const inputPw = $('input[name="signin-pw"]').val();
 		// check for spaces, empty, undefined
         if ((!inputUname) || (inputUname.length < 1) || (inputUname.indexOf(' ') > 0)) {
-            alert('Invalid email');
+            alert('Invalid username');
         }
         else if ((!inputPw) || (inputPw.length < 1) || (inputPw.indexOf(' ') > 0)) {
             alert('Invalid password');
@@ -145,19 +274,55 @@ $(document).ready(function () {
 	                contentType: 'application/json'
 	            })
 	            .done(function (result) {
-	            	$('#signin-page').hide();
-	            	$('#js-back-button').hide();
-	            	$('#js-delete-button').hide();
-					$('#user-home-page').show();
-					$('#js-signout-link').show();
+	            	if (newUserToggle === true) {
+	            		showAddPage();
+	            	} else {
+	            		$('#signin-page').hide();
+		            	$('#js-back-button').hide();
+		            	$('#js-delete-button').hide();
+						$('#user-home-page').show();
+						$('#js-signout-link').show();
+	            	}
 	        	})
 	        	.fail(function (jqXHR, error, errorThrown) {
 	                console.log(jqXHR);
 	                console.log(error);
 	                console.log(errorThrown);
-	                alert('User does not exist! Please sign up using the sign-up button.');
+	                alert('Invalid username and password combination. Pleae check your username and password and try again.');
 	            });
 		};
+
+		// when user clicks Add Accomplishment button from #user-home-page
+		document.getElementById('js-add-accomplishment').addEventListener('click', function(event) {
+			event.preventDefault();
+			console.log('user is ' + user);
+			backWarnToggle = true;
+			console.log(backWarnToggle);
+			$('*').scrollTop(0);
+			$("#datepicker").datepicker();
+			// show and hide
+			// if user already has achievements, show the add new blurb.
+			// otherwise, show the account setup blurb
+			//console.log('user is ' + user);
+			//console.log(getUserAchievements(user));
+			// if (typeof getUserAchievements(user) !== 'undefined' && getUserAchievements(user).length > 0) {
+			// 	console.log(getUserAchievements(user) + ' will be shown');
+			// } else {
+			// 	console.log('will show account-setup-blurb');
+			// }
+			$('#user-home-page').hide();
+			$('#account-setup-blurb').hide();
+			$('#js-delete-button').hide();
+			$('#add-new-blurb').show();
+			$('#account-setup-page').show();
+			$('#js-back-button').show();
+		});
+
+		// when user clicks I Did This button from #account-setup-page
+		document.getElementById('js-submit-accomplishment').addEventListener('click', function(event) {
+			console.log('user is ' + user);
+			submitNewAccomplishment(user);
+		});
 	});
 
 	// when user clicks sign-out link in header
@@ -165,17 +330,7 @@ $(document).ready(function () {
 		location.reload();
 	});
 
-	// when user clicks Add Accomplishment button from #user-home-page
-	document.getElementById('js-add-accomplishment').addEventListener('click', function(event) {
-		event.preventDefault();
-		backWarnToggle = true;
-		$('#user-home-page').hide();
-		$('#account-setup-blurb').hide();
-		$('#js-delete-button').hide();
-		$('#add-new-blurb').show();
-		$('#account-setup-page').show();
-		$('#js-back-button').show();
-	});
+	
 
 // when user clicks how/what/when/why links from home page
 	// when user clicks WHY from home page
@@ -260,9 +415,16 @@ $(document).ready(function () {
 			$.getJSON('/achievements/' + achievementId, function(res) {
 				// set back warning toggle to true
 				backWarnToggle = true;
+				console.log(backWarnToggle);
 				// add in pre-filled values based on achievement id
 				$('#achieve-what').val(res.achieveWhat);
 				$('#achieve-why').val(res.achieveWhy);
+				// datepicker not currently working
+				$("#datepicker").datepicker();
+				// {
+		  //       	numberOfMonths: 2,
+		  //       	showButtonPanel: true
+		  //   	}
 				$('#datepicker').val(res.achieveWhen);
 				// for loop
 				for (let i=0; i<res.achieveHow.length; i++) {
@@ -282,82 +444,16 @@ $(document).ready(function () {
 			$('#js-delete-button').show();
 			// reset back warning and edit toggles to false
 			backWarnToggle = false;
+			console.log(backWarnToggle);
 			// editToggle = false;
-			console.log(editToggle);
+			console.log(editToggle + " is edit toggle");
 
 			// when user clicks I Did This button from #account-setup-page
 			document.getElementById('js-submit-accomplishment').addEventListener('click', function(event) {
-				event.preventDefault();
-				backWarnToggle = false;
-				// AJAX call to send the form data up to the server/DB
-				// take values from form inputs
-				const achWhat = $('input[id="achieve-what"]').val();
-				console.log(achWhat);
-				var achHow = [];
-					// add all the cb values to the array achHow
-					var cbElements = $('input[type=checkbox]');
-					for (let i=0; i < cbElements.length; i++) {
-						if ($(cbElements[i]).is(':checked')) {
-							console.log(cbElements[i].value);
-							achHow.push(cbElements[i].value);
-						};
-					};
-					console.log(achHow);
-				// datepicker not currently working
-				$("#datepicker").datepicker({
-		        	numberOfMonths: 2,
-		        	showButtonPanel: true
-		    	});
-				const achWhen = $('input[id="datepicker"]').val();
-				console.log(achWhen);
-				const achWhy = $('input[id="achieve-why"]').val();
-				console.log(achWhy);
-				console.log('user is ' + user);
-				const newAchObject = {
-					user: user,
-					achieveWhat: achWhat,
-					achieveHow: achHow,
-					achieveWhen: achWhen,
-					achieveWhy: achWhy
-				};
-				console.log('about to check truth or falsehood of editToggle for ajax call');
-				if (editToggle === false) {
-					$.ajax({
-							type: 'POST',
-							url: 'achievements/create',
-							dataType: 'json',
-							data: JSON.stringify(newAchObject),
-							contentType: 'application/json'
-						})
-						.done(function (result) {
-							showTimeline();
-						})
-						.fail(function (jqXHR, error, errorThrown) {
-				            console.log(jqXHR);
-				            console.log(error);
-				            console.log(errorThrown);
-						});
-				} else if (editToggle === true) {
-					$.ajax({
-							type: 'PUT',
-							url: 'achievements/' + achievementId,
-							dataType: 'json',
-							data: JSON.stringify(newAchObject),
-							contentType: 'application/json'
-						})
-						.done(function (result) {
-							showTimeline();
-							editToggle = false;
-							console.log(editToggle);
-						})
-						.fail(function (jqXHR, error, errorThrown) {
-				            console.log(jqXHR);
-				            console.log(error);
-				            console.log(errorThrown);
-						});
-				};
+				submitNewAccomplishment(user);
 			});
 			// when user clicks DELETE button from an edit screen
+			// why is this executing twice?
 			document.getElementById('js-delete-button').addEventListener('click', function(event) {
 				event.preventDefault();
 				if (confirm('Are you SURE you want to delete this awesome accomplishment? Your data will be PERMANENTLY erased.') === true) {
@@ -405,26 +501,21 @@ $(document).ready(function () {
 			if (confirm('Are you sure you want to go back? Your changes will not be saved.') == true) {
 				showTimeline();
 				backWarnToggle = false;
+				console.log(backWarnToggle);
 			}
 		} else {
-			$('#visuals').hide();
-			$('#js-back-button').hide();
-			$('#js-delete-button').hide();
-			$('#account-setup-page').hide();
-			$('#user-home-page').show();
+			showHomePage();
 		};
 	});
 });
 
 // TODO:
 // add form validation for signin page
-// add PUT functionality for editing achievements
 // fix ordering issues with timeline
-// fix datepicker
 // on signup page, focus on top of account setup page after signing up
 // put buttons together in a line?
 // make sure correct user is being sent (problems due to pre-filled?)
 // user should be able to add their own skills/traits to checkbox list
 // store dates as unix dates--how?
 // add date display format selection capability
-// 
+// add 'Oops, nothing here yet!' for empty achievement lists (new users)
