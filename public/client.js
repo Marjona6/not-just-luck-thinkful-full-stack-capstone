@@ -5,6 +5,7 @@ var user = undefined;
 var editToggle = false;
 var backWarnToggle = false;
 var backToLandingPageToggle = false;
+var backToHomePageToggle = true;
 var newUserToggle = false;
 
 function submitNewAccomplishment(user) {
@@ -92,6 +93,24 @@ function getUserAchievements(user) {
 	return achArray;
 }
 
+function goBack() {
+	if (backToLandingPageToggle === true) {
+		location.reload();
+	} else if (backWarnToggle === true) {
+		event.preventDefault();
+		if (confirm('Are you sure you want to go back? Your changes will not be saved.') == true) {
+			if (backToHomePageToggle === true) {
+				showHomePage();
+			} else {
+				showTimeline();
+			}
+			backWarnToggle = false;
+		}
+	} else {
+		showHomePage();
+	};
+}
+
 function showSignInPage() {
 	backToLandingPageToggle = true;
 	$('#landing-page').hide();
@@ -105,16 +124,26 @@ function showSignInPage() {
 function showAddPage() {
 	$('*').scrollTop(0);
 	$('#landing-page').hide();
+	$('#user-home-page').hide();
 	$('#account-signup-page').hide();
 	$('#add-new-blurb').hide();
 	$('#js-signin-link').hide();
 	$('#js-signout-link').show();
-	$('#account-setup-blurb').show();
+	$('#account-setup-blurb').hide();
 	$('#account-setup-page').show();
+	$('#js-back-button').show();
+	if (newUserToggle === true) {
+		$('#account-setup-blurb').show();
+	} else {
+		$('#add-new-blurb').show();
+	};
 }
 
 function showHomePage() {
+	backToHomePageToggle = true;
 	$('#visuals').hide();
+	$('#landing-page').hide();
+	$('#signin-page').hide();
 	$('#js-back-button').hide();
 	$('#js-delete-button').hide();
 	$('#account-setup-page').hide();
@@ -136,10 +165,7 @@ function showTimeline() {
 	$('#visual-when').show();
 	$.getJSON('/achievements', function (res) {
 		let htmlContent = '';
-		//console.log(getUserAchievements(user)[0]);
-		//let testArray = getUserAchievements(user);
 		for (let i=0; i<res.achievements.length; i++) {
-			//console.log(testArray[i]);
 			if (res.achievements[i].user === user) {
 				let myUl = '<ul class="timeline-ul">';
 				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
@@ -213,13 +239,6 @@ $(document).ready(function () {
 				newUserToggle = true;
 				alert('Thanks for signing up! You may now sign in with your username and password.');
 				showSignInPage();
-				// $('#landing-page').hide();
-				// $('#account-signup-page').hide();
-				// $('#add-new-blurb').hide();
-				// $('#js-signin-link').hide();
-				// $('#js-signout-link').show();
-				// $('#account-setup-blurb').show();
-				// $('#account-setup-page').show();
 			})
 			.fail(function (jqXHR, error, errorThrown) {
 	            console.log(jqXHR);
@@ -237,13 +256,6 @@ $(document).ready(function () {
 	document.getElementById('js-signin-link').addEventListener('click', function(event) {
 		event.preventDefault();
 		showSignInPage();
-		// backToLandingPageToggle = true;
-		// $('#landing-page').hide();
-		// $('#account-signup-page').hide();
-		// $('#js-signin-link').hide();
-		// $('#js-delete-button').hide();
-		// $('#js-back-button').show();
-		// $('#signin-page').show();
 	});
 
 	// when user clicks sign-in button from #signin-page
@@ -277,11 +289,7 @@ $(document).ready(function () {
 	            	if (newUserToggle === true) {
 	            		showAddPage();
 	            	} else {
-	            		$('#signin-page').hide();
-		            	$('#js-back-button').hide();
-		            	$('#js-delete-button').hide();
-						$('#user-home-page').show();
-						$('#js-signout-link').show();
+	            		showHomePage();
 	            	}
 	        	})
 	        	.fail(function (jqXHR, error, errorThrown) {
@@ -300,28 +308,14 @@ $(document).ready(function () {
 			console.log(backWarnToggle);
 			$('*').scrollTop(0);
 			$("#datepicker").datepicker();
-			// show and hide
-			// if user already has achievements, show the add new blurb.
-			// otherwise, show the account setup blurb
-			//console.log('user is ' + user);
-			//console.log(getUserAchievements(user));
-			// if (typeof getUserAchievements(user) !== 'undefined' && getUserAchievements(user).length > 0) {
-			// 	console.log(getUserAchievements(user) + ' will be shown');
-			// } else {
-			// 	console.log('will show account-setup-blurb');
-			// }
-			$('#user-home-page').hide();
-			$('#account-setup-blurb').hide();
-			$('#js-delete-button').hide();
-			$('#add-new-blurb').show();
-			$('#account-setup-page').show();
-			$('#js-back-button').show();
+			showAddPage();
 		});
 
 		// when user clicks I Did This button from #account-setup-page
 		document.getElementById('js-submit-accomplishment').addEventListener('click', function(event) {
 			console.log('user is ' + user);
 			submitNewAccomplishment(user);
+			newUserToggle = false;
 		});
 	});
 
@@ -401,6 +395,7 @@ $(document).ready(function () {
 	document.getElementById('the-when').addEventListener('click', function(event) {
 		console.log('clicked the when');
 		event.preventDefault();
+		backToHomePageToggle = false;
 		showTimeline();
 
 		// when user clicks on an achievement heading from the timeline, takes user to edit screen for that achievement
@@ -421,10 +416,6 @@ $(document).ready(function () {
 				$('#achieve-why').val(res.achieveWhy);
 				// datepicker not currently working
 				$("#datepicker").datepicker();
-				// {
-		  //       	numberOfMonths: 2,
-		  //       	showButtonPanel: true
-		  //   	}
 				$('#datepicker').val(res.achieveWhen);
 				// for loop
 				for (let i=0; i<res.achieveHow.length; i++) {
@@ -493,19 +484,7 @@ $(document).ready(function () {
 
 	// when user clicks Back button from any of the visuals
 	document.getElementById('js-back-button').addEventListener('click', function(event) {
-		console.log('clicked js back button');
-		if (backToLandingPageToggle === true) {
-			location.reload();
-		} else if (backWarnToggle === true) {
-			event.preventDefault();
-			if (confirm('Are you sure you want to go back? Your changes will not be saved.') == true) {
-				showTimeline();
-				backWarnToggle = false;
-				console.log(backWarnToggle);
-			}
-		} else {
-			showHomePage();
-		};
+		goBack();
 	});
 });
 
