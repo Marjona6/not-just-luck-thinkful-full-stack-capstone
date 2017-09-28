@@ -2,11 +2,12 @@
 
 // Function and object definitions
 var user = undefined;
+var achievementId = undefined;
 var editToggle = false;
 var backWarnToggle = false;
 var backToLandingPageToggle = false;
-var backToHomePageToggle = true;
 var newUserToggle = false;
+var backToHomePageToggle = true;
 
 function submitNewAccomplishment(user) {
 	event.preventDefault();
@@ -81,16 +82,21 @@ function submitNewAccomplishment(user) {
 // can't seem to use--asynchronicity is ruining the world
 function getUserAchievements(user) {
 	console.log('user is ' + user);
-	let achArray = [];
-	$.getJSON('achievements', function(res) {
-		for (let i=0; i<res.achievements.length; i++) {
-			if (res.achievements[i].user === user) {
-				achArray.push(res.achievements[i]);
-			};
-		};
-	});
-	console.log(achArray);
-	return achArray;
+	// let achArray = [];
+	// $.getJSON('achievements', function(res) {
+	// 	for (let i=0; i<res.achievements.length; i++) {
+	// 		if (res.achievements[i].user === user) {
+	// 			achArray.push(res.achievements[i]);
+	// 		};
+	// 	};
+	// });
+	// console.log(achArray);
+	// if (achArray.length === 0) {
+	// 	newUserToggle = true;
+	// 	return achArray;
+	// } else {
+	// 	return achArray;
+	// }
 }
 
 function goBack() {
@@ -124,6 +130,7 @@ function showSignInPage() {
 function showAddPage() {
 	$('*').scrollTop(0);
 	$('#landing-page').hide();
+	$('#signin-page').hide();
 	$('#user-home-page').hide();
 	$('#account-signup-page').hide();
 	$('#add-new-blurb').hide();
@@ -133,6 +140,7 @@ function showAddPage() {
 	$('#account-setup-page').show();
 	$('#js-back-button').show();
 	if (newUserToggle === true) {
+		$('#js-back-button').hide();
 		$('#account-setup-blurb').show();
 	} else {
 		$('#add-new-blurb').show();
@@ -172,7 +180,12 @@ function showTimeline() {
 					myUl += `<li>${res.achievements[i].achieveHow[j]}</li>`;
 				};
 				myUl += '</ul>';
-				htmlContent += `<div class="timeline-item" date-is="${res.achievements[i].achieveWhen}">
+				let achWhenReadable = new Date(res.achievements[i].achieveWhen);
+				let dd = achWhenReadable.getDate();
+				let mm = achWhenReadable.getMonth()+1;
+				let yyyy = achWhenReadable.getFullYear();
+				achWhenReadable = dd + '-' + mm + '-' + yyyy;
+				htmlContent += `<div class="timeline-item" date-is="${achWhenReadable}">
 					<a href="#" class="js-get-achievement" id="${res.achievements[i]._id}"><h2>
 					${res.achievements[i].achieveWhat}</h2></a>
 					<p>${res.achievements[i].achieveWhy}</p>
@@ -207,14 +220,12 @@ $(document).ready(function () {
 	document.getElementById('js-new-account').addEventListener('click', function(event) {
 		const form = document.body.querySelector('#new-account-form');
 		if (form.checkValidity && !form.checkValidity()) {
-			console.log('validity has been checked');
 			return;
 		}
 		const fname = $('input[name="fname"]').val();
 		const uname = $('input[name="uname"]').val();
 		const pw = $('input[name="pw"]').val();
 		const confirmPw = $('input[name="confirm-pw"]').val();
-		console.log('setting values');
 		if (pw !== confirmPw) {
 			event.preventDefault();
 			alert('Passwords must match!');
@@ -278,6 +289,21 @@ $(document).ready(function () {
                 password: inputPw
 	        };
 	        user = inputUname;
+	        // the below is not working--thinks every achArray is empty and all users are new users
+	  //       let achArray = [];
+			// $.getJSON('achievements', function(res) {
+			// 	for (let i=0; i<res.achievements.length; i++) {
+			// 		if (res.achievements[i].user === user) {
+			// 			achArray.push(res.achievements[i]);
+			// 		};
+			// 	};
+			// });
+			// console.log(achArray);
+			// if (achArray.length === 0) {
+			// 	newUserToggle = true;
+			// } else {
+			// 	newUserToggle = false;
+			// }
 	        $.ajax({
 	        	type: "POST",
 	                url: "/signin",
@@ -303,9 +329,8 @@ $(document).ready(function () {
 		// when user clicks Add Accomplishment button from #user-home-page
 		document.getElementById('js-add-accomplishment').addEventListener('click', function(event) {
 			event.preventDefault();
-			console.log('user is ' + user);
+			// console.log('user is ' + user);
 			backWarnToggle = true;
-			console.log(backWarnToggle);
 			$('*').scrollTop(0);
 			$("#datepicker").datepicker();
 			showAddPage();
@@ -313,7 +338,7 @@ $(document).ready(function () {
 
 		// when user clicks I Did This button from #account-setup-page
 		document.getElementById('js-submit-accomplishment').addEventListener('click', function(event) {
-			console.log('user is ' + user);
+			// console.log('user is ' + user);
 			submitNewAccomplishment(user);
 			newUserToggle = false;
 		});
@@ -369,15 +394,11 @@ $(document).ready(function () {
 					};
 				};
 			};
-			console.log(traitsObject);
-			console.log(Object.keys(traitsObject));
 			let htmlContent = '';
 			for (let i=0; i<Object.keys(traitsObject).length; i++) {
 				// let the font size of each trait vary with number of instances; more instances = greater font size
 				htmlContent += `<span class="size-${Object.values(traitsObject)[i]}"> ${Object.keys(traitsObject)[i].toLowerCase()} </span>`;
-				console.log(Object.keys(traitsObject)[i].toLowerCase());
 			}
-			console.log(htmlContent);
 			$('#traits').html(htmlContent);
 			
 		});
@@ -393,33 +414,28 @@ $(document).ready(function () {
 
 	// when user clicks WHEN from home page
 	document.getElementById('the-when').addEventListener('click', function(event) {
-		console.log('clicked the when');
 		event.preventDefault();
 		backToHomePageToggle = false;
 		showTimeline();
 
 		// when user clicks on an achievement heading from the timeline, takes user to edit screen for that achievement
 		$(document).on('click', '.js-get-achievement', function(event) {
-			console.log('clicked js get achievement');
 			event.preventDefault();
 			editToggle = true;
-			console.log(editToggle);
-			console.log(event.target.parentNode.id);
-			const achievementId = event.target.parentNode.id;
+			achievementId = event.target.parentNode.id;
 			// AJAX call to get the values of the achievement from the DB
 			$.getJSON('/achievements/' + achievementId, function(res) {
 				// set back warning toggle to true
 				backWarnToggle = true;
-				console.log(backWarnToggle);
 				// add in pre-filled values based on achievement id
 				$('#achieve-what').val(res.achieveWhat);
 				$('#achieve-why').val(res.achieveWhy);
 				// datepicker not currently working
 				$("#datepicker").datepicker();
-				$('#datepicker').val(res.achieveWhen);
+				let achWhenReadable = new Date(res.achieveWhen);
+				$('#datepicker').val(achWhenReadable);
 				// for loop
 				for (let i=0; i<res.achieveHow.length; i++) {
-					console.log(res.achieveHow[i]);
 					$('input[value="' + res.achieveHow[i] + '"]').prop('checked', 'checked');
 				}
 			});
@@ -435,9 +451,6 @@ $(document).ready(function () {
 			$('#js-delete-button').show();
 			// reset back warning and edit toggles to false
 			backWarnToggle = false;
-			console.log(backWarnToggle);
-			// editToggle = false;
-			console.log(editToggle + " is edit toggle");
 
 			// when user clicks I Did This button from #account-setup-page
 			document.getElementById('js-submit-accomplishment').addEventListener('click', function(event) {
@@ -447,6 +460,7 @@ $(document).ready(function () {
 			// why is this executing twice?
 			document.getElementById('js-delete-button').addEventListener('click', function(event) {
 				event.preventDefault();
+				backToHomePageToggle = false;
 				if (confirm('Are you SURE you want to delete this awesome accomplishment? Your data will be PERMANENTLY erased.') === true) {
 					$.ajax({
 						method: 'DELETE',
@@ -491,10 +505,9 @@ $(document).ready(function () {
 // TODO:
 // add form validation for signin page
 // fix ordering issues with timeline
-// on signup page, focus on top of account setup page after signing up
+// display dates as human-readable dates in timeline
 // put buttons together in a line?
 // make sure correct user is being sent (problems due to pre-filled?)
 // user should be able to add their own skills/traits to checkbox list
-// store dates as unix dates--how?
 // add date display format selection capability
 // add 'Oops, nothing here yet!' for empty achievement lists (new users)

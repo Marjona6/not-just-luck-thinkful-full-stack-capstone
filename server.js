@@ -188,10 +188,10 @@ app.put('/achievements/:id', function (req, res) {
 app.get('/achievements', function (req, res) {
     Achievement
         .find()
+        .sort('achieveWhen')
         .then(function (achievements) {
             res.json({
                 achievements: achievements.map(function (achievement) {
-                    // console.log(achievement);
                     return achievement;
                 })
             });
