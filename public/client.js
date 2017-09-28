@@ -159,9 +159,7 @@ function showHomePage() {
 }
 
 function showTimeline() {
-	console.log('running function showTimeline');
 	backWarnToggle = false;
-	console.log(backWarnToggle);
 	$('#account-setup-page').hide();
 	$('#user-home-page').hide();
 	$('#js-delete-button').hide();
