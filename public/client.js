@@ -21,7 +21,6 @@ function submitNewAccomplishment(user) {
 		var cbElements = $('input[type=checkbox]');
 		for (let i=0; i < cbElements.length; i++) {
 			if ($(cbElements[i]).is(':checked')) {
-				console.log(cbElements[i].value);
 				achHow.push(cbElements[i].value);
 			};
 		};
@@ -54,7 +53,7 @@ function submitNewAccomplishment(user) {
 	} else if (editToggle === true) {
 		$.ajax({
 				type: 'PUT',
-				url: 'achievements/' + achievementId,
+				url: 'achievement/' + achievementId,
 				dataType: 'json',
 				data: JSON.stringify(newAchObject),
 				contentType: 'application/json'
@@ -73,7 +72,7 @@ function submitNewAccomplishment(user) {
 
 // can't seem to use--asynchronicity is ruining the world
 function getUserAchievements(user) {
-	console.log('user is ' + user);
+	// console.log('user is ' + user);
 	// let achArray = [];
 	// $.getJSON('achievements', function(res) {
 	// 	for (let i=0; i<res.achievements.length; i++) {
@@ -161,16 +160,17 @@ function showTimeline() {
 	$('#js-back-button').show();
 	$('#visuals').show();
 	$('#visual-when').show();
-	$.getJSON('/achievements', function (res) {
+	console.log(user);
+	$.getJSON('/achievements/' + user, function (res) {
 		let htmlContent = '';
-		for (let i=0; i<res.achievements.length; i++) {
-			if (res.achievements[i].user === user) {
+		for (let i=0; i<res.achievementOutput.length; i++) {
+			if (res.achievementOutput[i].user === user) {
 				let myUl = '<ul class="timeline-ul">';
-				for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
-					myUl += `<li>${res.achievements[i].achieveHow[j]}</li>`;
+				for (let j=0; j<res.achievementOutput[i].achieveHow.length; j++) {
+					myUl += `<li>${res.achievementOutput[i].achieveHow[j]}</li>`;
 				};
 				myUl += '</ul>';
-				let achWhenReadable = new Date(res.achievements[i].achieveWhen);
+				let achWhenReadable = new Date(res.achievementOutput[i].achieveWhen);
 				let dd = achWhenReadable.getDate();
 				let mm = achWhenReadable.getMonth()+1;
 				let yyyy = achWhenReadable.getFullYear();
@@ -184,9 +184,9 @@ function showTimeline() {
 					achWhenReadable = dd + '/' + mm + '/' + yyyy;
 				}
 				htmlContent += `<div class="timeline-item" date-is="${achWhenReadable}">
-					<a href="#" class="js-get-achievement" id="${res.achievements[i]._id}"><h2>
-					${res.achievements[i].achieveWhat}</h2></a>
-					<p>${res.achievements[i].achieveWhy}</p>
+					<a href="#" class="js-get-achievement" id="${res.achievementOutput[i]._id}"><h2>
+					${res.achievementOutput[i].achieveWhat}</h2></a>
+					<p>${res.achievementOutput[i].achieveWhy}</p>
 					<p>It took: ${myUl}</div>`;	
 				};			
 		};
@@ -430,7 +430,7 @@ $(document).ready(function () {
 			editToggle = true;
 			achievementId = event.target.parentNode.id;
 			// AJAX call to get the values of the achievement from the DB
-			$.getJSON('/achievements/' + achievementId, function(res) {
+			$.getJSON('/achievement/' + achievementId, function(res) {
 				// set back warning toggle to true
 				backWarnToggle = true;
 				// add in pre-filled values based on achievement id
@@ -469,7 +469,7 @@ $(document).ready(function () {
 				if (confirm('Are you SURE you want to delete this awesome accomplishment? Your data will be PERMANENTLY erased.') === true) {
 					$.ajax({
 						method: 'DELETE',
-						url: '/achievements/' + achievementId,
+						url: '/achievement/' + achievementId,
 						success: showTimeline
 					});
 				}
@@ -510,7 +510,6 @@ $(document).ready(function () {
 // TODO:
 // put buttons together in a line?
 // user should be able to add their own skills/traits to checkbox list
-// 1) add date display format selection capability
 // add 'Oops, nothing here yet!' for empty achievement lists (new users)
 // fix issues with new users who create an account, then come back later to set up account--
 // ... it doesn't automatically take them to account setup page but rather homepage (very minor issue)

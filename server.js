@@ -185,16 +185,21 @@ app.put('/achievements/:id', function (req, res) {
 
 // GET ------------------------------------
 // accessing all of a user's achievements
-app.get('/achievements', function (req, res) {
+app.get('/achievements/:user', function (req, res) {
+    console.log(req.params.user);
     Achievement
         .find()
         .sort('achieveWhen')
         .then(function (achievements) {
-            res.json({
-                achievements: achievements.map(function (achievement) {
-                    return achievement;
-                })
+            let achievementOutput = [];
+            achievements.map(function (achievement) {
+                if (achievement.user == req.params.user) {
+                    achievementOutput.push(achievement);            
+                }
             });
+        res.json({
+            achievementOutput
+        }); 
         })
         .catch(function (err) {
             console.error(err);
@@ -205,7 +210,7 @@ app.get('/achievements', function (req, res) {
 });
 
 // accessing a single achievement by id
-app.get('/achievements/:id', function (req, res) {
+app.get('/achievement/:id', function (req, res) {
     Achievement
         .findById(req.params.id).exec().then(function (achievement) {
             return res.json(achievement);
@@ -220,7 +225,7 @@ app.get('/achievements/:id', function (req, res) {
 
 // DELETE ----------------------------------------
 // deleting an achievement by id
-app.delete('/achievements/:id', function(req, res) {
+app.delete('/achievement/:id', function(req, res) {
     Achievement.findByIdAndRemove(req.params.id).exec().then(function(achievement) {
         return res.status(204).end();
     }).catch(function(err) {
