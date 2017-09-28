@@ -174,31 +174,14 @@
     		<div id="visual-when">
     			<h3>WHEN?</h3>
     			<p>Take a look at all the awesome stuff you've achieved!</p>
-
-				<div class="timeline-container">
-					
-					<!-- <div class="timeline-item" date-is='20-07-1990'>
-						<h1>Hello, 'Im a single div responsive timeline without mediaQueries!</h1>
-						<p>
-							I'm speaking with myself, number one, because I have a very good brain and I've said a lot of things. I write the best placeholder text, and I'm the biggest developer on the web by far... While that's mock-ups and this is politics, are they really so different? I think the only card she has is the Lorem card.
-						</p>
-					</div>
-					
-					<div class="timeline-item" date-is='20-07-1990'>
-						<h1>Oeehhh, that's awesome.. Me too!</h1>
-						<p>
-							I'm speaking with myself, number one, because I have a very good brain and I've said a lot of things. I write the best placeholder text, and I'm the biggest developer on the web by far... While that's mock-ups and this is politics, are they really so different? I think the only card she has is the Lorem card.
-						</p>
-					</div>
-					
-					<div class="timeline-item" date-is='20-07-1990'>
-						<h1>I'm ::last-child so my border fades ^__^</h1>
-						<p>
-							I'm speaking with myself, number one, because I have a very good brain and I've said a lot of things. I write the best placeholder text, and I'm the biggest developer on the web by far... While that's mock-ups and this is politics, are they really so different? I think the only card she has is the Lorem card.
-						</p>
-					</div> -->
-					
-				</div>
+                <div id="select-date-format">
+                    <select name="date-format">
+                        <option value="eu">DD/MM/YYYY</option>
+                        <option value="us">MM/DD/YYYY</option>
+                        <option value="in">YYYY/MM/DD</option>
+                    <input type="submit" id="js-format-date" class="my-buttons" value="Change Date Format">
+                </div>
+				<div class="timeline-container"></div>
     		</div>
         </section>
         <input type="submit" id="js-back-button" class="my-buttons" value="Back" />

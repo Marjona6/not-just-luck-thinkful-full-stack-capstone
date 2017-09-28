@@ -3,6 +3,7 @@
 // Function and object definitions
 var user = undefined;
 var achievementId = undefined;
+var dateFormat = 'eu';
 var editToggle = false;
 var backWarnToggle = false;
 var backToLandingPageToggle = false;
@@ -12,11 +13,9 @@ var backToHomePageToggle = true;
 function submitNewAccomplishment(user) {
 	event.preventDefault();
 	backWarnToggle = false;
-	console.log(backWarnToggle);
 	// AJAX call to send the form data up to the server/DB
 	// take values from form inputs
 	const achWhat = $('input[id="achieve-what"]').val();
-	console.log(achWhat);
 	var achHow = [];
 		// add all the cb values to the array achHow
 		var cbElements = $('input[type=checkbox]');
@@ -26,14 +25,9 @@ function submitNewAccomplishment(user) {
 				achHow.push(cbElements[i].value);
 			};
 		};
-		console.log(achHow);
 	var achWhen = $('input[id="datepicker"]').val();
-	console.log(achWhen + ' is achWhen value before changing to epoch format');
 	achWhen = Date.parse(achWhen);
-	console.log(achWhen + ' after parsing');
 	const achWhy = $('input[id="achieve-why"]').val();
-	console.log(achWhy);
-	console.log('user is ' + user);
 	const newAchObject = {
 		user: user,
 		achieveWhat: achWhat,
@@ -41,7 +35,6 @@ function submitNewAccomplishment(user) {
 		achieveWhen: achWhen,
 		achieveWhy: achWhy
 	};
-	console.log('about to check truth or falsehood of editToggle for ajax call');
 	if (editToggle === false) {
 		$.ajax({
 				type: 'POST',
@@ -69,7 +62,6 @@ function submitNewAccomplishment(user) {
 			.done(function (result) {
 				showTimeline();
 				editToggle = false;
-				console.log(editToggle);
 			})
 			.fail(function (jqXHR, error, errorThrown) {
 	            console.log(jqXHR);
@@ -182,7 +174,15 @@ function showTimeline() {
 				let dd = achWhenReadable.getDate();
 				let mm = achWhenReadable.getMonth()+1;
 				let yyyy = achWhenReadable.getFullYear();
-				achWhenReadable = dd + '-' + mm + '-' + yyyy;
+				// if statements to choose date display format go here
+				// defaults to European
+				if (dateFormat == 'in') {
+					achWhenReadable = yyyy + '/' + mm + '/' + dd;
+				} else if (dateFormat == 'us') {
+					achWhenReadable = mm + '/' + dd + '/' + yyyy;
+				} else {
+					achWhenReadable = dd + '/' + mm + '/' + yyyy;
+				}
 				htmlContent += `<div class="timeline-item" date-is="${achWhenReadable}">
 					<a href="#" class="js-get-achievement" id="${res.achievements[i]._id}"><h2>
 					${res.achievements[i].achieveWhat}</h2></a>
@@ -234,7 +234,6 @@ $(document).ready(function () {
 				password: pw
 			};
 			// will assign a value to variable 'user' in signin step below
-			// user = uname;
 			// AJAX call to send form data up to server/DB and create new user
 			$.ajax({
 				type: 'POST',
@@ -310,6 +309,8 @@ $(document).ready(function () {
 	                contentType: 'application/json'
 	            })
 	            .done(function (result) {
+	            	// show the signout link in header as soon as user is signed in
+					$('#js-signout-link').show();
 	            	if (newUserToggle === true) {
 	            		showAddPage();
 	            	} else {
@@ -416,6 +417,13 @@ $(document).ready(function () {
 		backToHomePageToggle = false;
 		showTimeline();
 
+		// when user clicks js-format-date button to change display date format
+		$(document).on('click', '#js-format-date', function(event) {
+			event.preventDefault();
+			dateFormat = $('select[name="date-format"]').find('option:selected').val();
+			showTimeline();
+		});
+
 		// when user clicks on an achievement heading from the timeline, takes user to edit screen for that achievement
 		$(document).on('click', '.js-get-achievement', function(event) {
 			event.preventDefault();
@@ -455,7 +463,6 @@ $(document).ready(function () {
 				submitNewAccomplishment(user);
 			});
 			// when user clicks DELETE button from an edit screen
-			// why is this executing twice?
 			document.getElementById('js-delete-button').addEventListener('click', function(event) {
 				event.preventDefault();
 				backToHomePageToggle = false;
@@ -463,7 +470,7 @@ $(document).ready(function () {
 					$.ajax({
 						method: 'DELETE',
 						url: '/achievements/' + achievementId,
-						success: showTimeline //some function
+						success: showTimeline
 					});
 				}
 			});
@@ -501,11 +508,9 @@ $(document).ready(function () {
 });
 
 // TODO:
-// add form validation for signin page
-// fix ordering issues with timeline
-// display dates as human-readable dates in timeline
 // put buttons together in a line?
-// make sure correct user is being sent (problems due to pre-filled?)
 // user should be able to add their own skills/traits to checkbox list
-// add date display format selection capability
+// 1) add date display format selection capability
 // add 'Oops, nothing here yet!' for empty achievement lists (new users)
+// fix issues with new users who create an account, then come back later to set up account--
+// ... it doesn't automatically take them to account setup page but rather homepage (very minor issue)
