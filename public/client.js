@@ -160,35 +160,32 @@ function showTimeline() {
 	$('#js-back-button').show();
 	$('#visuals').show();
 	$('#visual-when').show();
-	console.log(user);
 	$.getJSON('/achievements/' + user, function (res) {
 		let htmlContent = '';
 		for (let i=0; i<res.achievementOutput.length; i++) {
-			if (res.achievementOutput[i].user === user) {
-				let myUl = '<ul class="timeline-ul">';
-				for (let j=0; j<res.achievementOutput[i].achieveHow.length; j++) {
-					myUl += `<li>${res.achievementOutput[i].achieveHow[j]}</li>`;
-				};
-				myUl += '</ul>';
-				let achWhenReadable = new Date(res.achievementOutput[i].achieveWhen);
-				let dd = achWhenReadable.getDate();
-				let mm = achWhenReadable.getMonth()+1;
-				let yyyy = achWhenReadable.getFullYear();
-				// if statements to choose date display format go here
-				// defaults to European
-				if (dateFormat == 'in') {
-					achWhenReadable = yyyy + '/' + mm + '/' + dd;
-				} else if (dateFormat == 'us') {
-					achWhenReadable = mm + '/' + dd + '/' + yyyy;
-				} else {
-					achWhenReadable = dd + '/' + mm + '/' + yyyy;
-				}
-				htmlContent += `<div class="timeline-item" date-is="${achWhenReadable}">
-					<a href="#" class="js-get-achievement" id="${res.achievementOutput[i]._id}"><h2>
-					${res.achievementOutput[i].achieveWhat}</h2></a>
-					<p>${res.achievementOutput[i].achieveWhy}</p>
-					<p>It took: ${myUl}</div>`;	
-				};			
+			let myUl = '<ul class="timeline-ul">';
+			for (let j=0; j<res.achievementOutput[i].achieveHow.length; j++) {
+				myUl += `<li>${res.achievementOutput[i].achieveHow[j]}</li>`;
+			};
+			myUl += '</ul>';
+			let achWhenReadable = new Date(res.achievementOutput[i].achieveWhen);
+			let dd = achWhenReadable.getDate();
+			let mm = achWhenReadable.getMonth()+1;
+			let yyyy = achWhenReadable.getFullYear();
+			// if statements to choose date display format go here
+			// defaults to European
+			if (dateFormat == 'in') {
+				achWhenReadable = yyyy + '/' + mm + '/' + dd;
+			} else if (dateFormat == 'us') {
+				achWhenReadable = mm + '/' + dd + '/' + yyyy;
+			} else {
+				achWhenReadable = dd + '/' + mm + '/' + yyyy;
+			}
+			htmlContent += `<div class="timeline-item" date-is="${achWhenReadable}">
+				<a href="#" class="js-get-achievement" id="${res.achievementOutput[i]._id}"><h2>
+				${res.achievementOutput[i].achieveWhat}</h2></a>
+				<p>${res.achievementOutput[i].achieveWhy}</p>
+				<p>It took: ${myUl}</div>`;	
 		};
 		$('.timeline-container').html(htmlContent);
 	});
@@ -353,13 +350,11 @@ $(document).ready(function () {
 // when user clicks how/what/when/why links from home page
 	// when user clicks WHY from home page
 	document.getElementById('the-why').addEventListener('click', function(event) {
-		$.getJSON('/achievements', function (res) {
+		$.getJSON('/achievements/' + user, function (res) {
 			let htmlContent = '';
-			for (let i=0; i<res.achievements.length; i++) {
-				if (res.achievements[i].user === user) {
-					if (res.achievements[i].achieveWhy !== undefined) {
-						htmlContent += '<p>' + res.achievements[i].achieveWhy + '</p>';
-					};
+			for (let i=0; i<res.achievementOutput.length; i++) {
+				if (res.achievementOutput[i].achieveWhy !== undefined) {
+					htmlContent += '<p>' + res.achievementOutput[i].achieveWhy + '</p>';
 				};
 			};
 			$('#motivations').html(htmlContent);
@@ -376,20 +371,17 @@ $(document).ready(function () {
 
 	// when user clicks HOW from home page
 	document.getElementById('the-how').addEventListener('click', function(event) {
-		$.getJSON('/achievements', function (res) {
+		$.getJSON('/achievements/' + user, function (res) {
 			let traitsObject = {};
-			for (let i=0; i<res.achievements.length; i++) {
-				// make sure to only get those belonging to the signed-in user
-				if (res.achievements[i].user === user) {
-					// need to loop through each res.achievements[i].achieveHow array and add up the total of each trait
-					for (let j=0; j<res.achievements[i].achieveHow.length; j++) {
-						if (res.achievements[i].achieveHow[j] in traitsObject) {
-							// if the trait already exists in the object, increase its value by 1 (1 instance)
-							traitsObject[res.achievements[i].achieveHow[j]] += 1;
-						} else {
-							// if the trait does not exist in the object already, add it with value of 1 (1 instance)
-							traitsObject[res.achievements[i].achieveHow[j]]	= 1;
-						};
+			for (let i=0; i<res.achievementOutput.length; i++) {
+				// need to loop through each res.achievementOutput[i].achieveHow array and add up the total of each trait
+				for (let j=0; j<res.achievementOutput[i].achieveHow.length; j++) {
+					if (res.achievementOutput[i].achieveHow[j] in traitsObject) {
+						// if the trait already exists in the object, increase its value by 1 (1 instance)
+						traitsObject[res.achievementOutput[i].achieveHow[j]] += 1;
+					} else {
+						// if the trait does not exist in the object already, add it with value of 1 (1 instance)
+						traitsObject[res.achievementOutput[i].achieveHow[j]]	= 1;
 					};
 				};
 			};
@@ -480,13 +472,11 @@ $(document).ready(function () {
 
 	// when user clicks WHAT from home page
 	document.getElementById('the-what').addEventListener('click', function(event) {
-		$.getJSON('/achievements', function (res) {
+		$.getJSON('/achievements/' + user, function (res) {
 			let htmlContent = '';
-			for (let i=0; i<res.achievements.length; i++) {
-				if (res.achievements[i].user === user) {
-					if (res.achievements[i].achieveWhat !== undefined) {
-						htmlContent += '<p>' + res.achievements[i].achieveWhat + '</p>';
-					};
+			for (let i=0; i<res.achievementOutput.length; i++) {
+				if (res.achievementOutput[i].achieveWhat !== undefined) {
+					htmlContent += '<p>' + res.achievementOutput[i].achieveWhat + '</p>';
 				};
 			};
 			$('#awesome-stuff').html(htmlContent);
