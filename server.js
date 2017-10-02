@@ -133,7 +133,7 @@ app.post('/signin', function (req, res) {
 // -------------ACHIEVEMENT ENDPOINTS------------------------------------------------
 // POST -----------------------------------------
 // creating a new achievement
-app.post('/achievements/create', (req, res) => {
+app.post('/new/create', (req, res) => {
     console.log(req.body);
     let achieveWhat = req.body.achieveWhat;
     achieveWhat = achieveWhat.trim();
@@ -163,7 +163,7 @@ app.post('/achievements/create', (req, res) => {
 });
 
 // PUT --------------------------------------
-app.put('/achievements/:id', function (req, res) {
+app.put('/achievement/:id', function (req, res) {
     console.log(res);
     let toUpdate = {};
     let updateableFields = ['achieveWhat', 'achieveHow', 'achieveWhen', 'achieveWhy'];
@@ -211,7 +211,7 @@ app.get('/achievements/:user', function (req, res) {
 });
 
 // accessing a single achievement by id
-app.get('/achievements/:id', function (req, res) {
+app.get('/achievement/:id', function (req, res) {
     Achievement
         .findById(req.params.id).exec().then(function (achievement) {
             return res.json(achievement);
@@ -226,7 +226,7 @@ app.get('/achievements/:id', function (req, res) {
 
 // DELETE ----------------------------------------
 // deleting an achievement by id
-app.delete('/achievements/:id', function(req, res) {
+app.delete('/achievement/:id', function(req, res) {
     Achievement.findByIdAndRemove(req.params.id).exec().then(function(achievement) {
         return res.status(204).end();
     }).catch(function(err) {
