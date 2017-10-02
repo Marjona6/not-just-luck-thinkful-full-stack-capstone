@@ -164,6 +164,7 @@ app.post('/achievements/create', (req, res) => {
 
 // PUT --------------------------------------
 app.put('/achievements/:id', function (req, res) {
+    console.log(res);
     let toUpdate = {};
     let updateableFields = ['achieveWhat', 'achieveHow', 'achieveWhen', 'achieveWhy'];
     updateableFields.forEach(function(field) {
@@ -210,7 +211,7 @@ app.get('/achievements/:user', function (req, res) {
 });
 
 // accessing a single achievement by id
-app.get('/achievement/:id', function (req, res) {
+app.get('/achievements/:id', function (req, res) {
     Achievement
         .findById(req.params.id).exec().then(function (achievement) {
             return res.json(achievement);
@@ -225,7 +226,7 @@ app.get('/achievement/:id', function (req, res) {
 
 // DELETE ----------------------------------------
 // deleting an achievement by id
-app.delete('/achievement/:id', function(req, res) {
+app.delete('/achievements/:id', function(req, res) {
     Achievement.findByIdAndRemove(req.params.id).exec().then(function(achievement) {
         return res.status(204).end();
     }).catch(function(err) {

@@ -53,7 +53,7 @@ function submitNewAccomplishment(user) {
 	} else if (editToggle === true) {
 		$.ajax({
 				type: 'PUT',
-				url: 'achievement/' + achievementId,
+				url: 'achievements/' + achievementId,
 				dataType: 'json',
 				data: JSON.stringify(newAchObject),
 				contentType: 'application/json'
@@ -422,7 +422,7 @@ $(document).ready(function () {
 			editToggle = true;
 			achievementId = event.target.parentNode.id;
 			// AJAX call to get the values of the achievement from the DB
-			$.getJSON('/achievement/' + achievementId, function(res) {
+			$.getJSON('/achievements/' + achievementId, function(res) {
 				// set back warning toggle to true
 				backWarnToggle = true;
 				// add in pre-filled values based on achievement id
@@ -461,7 +461,7 @@ $(document).ready(function () {
 				if (confirm('Are you SURE you want to delete this awesome accomplishment? Your data will be PERMANENTLY erased.') === true) {
 					$.ajax({
 						method: 'DELETE',
-						url: '/achievement/' + achievementId,
+						url: '/achievements/' + achievementId,
 						success: showTimeline
 					});
 				}
