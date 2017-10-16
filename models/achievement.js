@@ -14,7 +14,7 @@ const achievementSchema = new mongoose.Schema({
 		type: Array,
 		required: false},
     achieveWhen: {
-        type: Number,
+        type: String,
         required: false},
     achieveWhy: {
         type: String,
