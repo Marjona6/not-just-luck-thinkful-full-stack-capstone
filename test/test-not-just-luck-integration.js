@@ -58,7 +58,7 @@ function generateAchievementData() {
 		user: testUsername, 
 		achieveWhat: faker.lorem.sentence(),
 		achieveHow: [generateTrait(), generateTrait(), generateTrait()],
-		achieveWhen: faker.date.past(),
+		achieveWhen: faker.date.past().toString(),
 		achieveWhy: faker.lorem.sentence()
 	}
 }
@@ -78,23 +78,22 @@ describe('Achievements API resource', function() {
 		return seedAchievementData();
 	});
 
-	// describe('GET endpoint', function() {
-	// 	// how to make sure only one user's achievements are targeted?
-	// 	it('should return all achievements in the DB', function() {
-	// 		let res;
-	// 		return chai.request(app)
-	// 			.get('/achievements')
-	// 			.then(function(_res) {
-	// 				res = _res;
-	// 				res.should.have.status(200);
-	// 				res.body.achievements.should.have.length.of.at.least(1);
-	// 				return Achievement.count();
-	// 			})
-	// 			.then(function(count) {
-	// 				res.body.achievements.should.have.length.of(count);
-	// 			});
-	// 	});
-	// });
+	describe('GET endpoint', function() {
+		it('should return all achievements in the DB for a user', function() {
+			let res;
+			return chai.request(app)
+				.get('/achievements/' + testUsername)
+				.then(function(_res) {
+					res = _res;
+					res.should.have.status(200);
+					res.body.achievementOutput.should.have.length.of.at.least(1);
+					return Achievement.count();
+				})
+				.then(function(count) {
+					res.body.achievementOutput.should.have.length.of(count);
+				});
+		});
+	});
 
 	it('should return achievements with the right fields', function() {
 		// ensure they have the expected keys
@@ -102,49 +101,51 @@ describe('Achievements API resource', function() {
 			.get('/achievements/' + testUsername)
 			.then(function(res) {
 				res.should.have.status(200);
-				// res.should.be.json;
-				// res.body.achievements.should.be.a('array');
-				// res.body.achievements.should.have.length.of.at.least(1);
+				res.should.be.json;
+				res.body.achievementOutput.should.be.a('array');
+				res.body.achievementOutput.should.have.length.of.at.least(1);
 
-				// res.body.achievements.forEach(function(achievement) {
-				// 	achievement.should.be.a('object');
-				// 	achievement.should.include.keys(
-				// 		'user', 'achieveWhat', 'achieveHow', 'achieveWhen', 'achieveWhy');
-				// });
+				res.body.achievementOutput.forEach(function(achievement) {
+					achievement.should.be.a('object');
+					achievement.should.include.keys(
+						'user', 'achieveWhat', 'achieveHow', 'achieveWhen', 'achieveWhy');
+				});
 			});
 	});
 
-	// describe('POST endpoint', function() {
-	// 	it('should add a new achievement', function() {
-	// 		const newAchievement = generateAchievementData();
+	describe('POST endpoint', function() {
+		it('should add a new achievement', function() {
+			const newAchievement = generateAchievementData();
+			console.log(newAchievement);
 
-	// 		return chai.request(app)
-	// 			.post('/achievements')
-	// 			.send(newAchievement)
-	// 			.then(function(res) {
-	// 				res.should.have.status(201);
-	// 				res.should.be.json;
-	// 				res.body.should.be.a('object');
-	// 				res.body.should.include.keys(
-	// 					'user', 'achieveWhat', 'achieveHow', 'achieveWhen', 'achieveWhy');
-	// 				res.body.user.should.equal(newAchievement.user);
-	// 				res.body.achieveWhat.should.equal(newAchievement.achieveWhat);
-	// 				res.body.achieveHow.should.equal(newAchievement.achieveHow);
-	// 				res.body.achieveWhen.should.equal(newAchievement.achieveWhen);
-	// 				res.body.achieveWhy.should.equal(newAchievement.achieveWhy);
-	// 				res.body.id.should.not.be.null;
+			return chai.request(app)
+				.post('/new/create')
+				.send(newAchievement)
+				.then(function(res) {
+					res.should.have.status(200);
+					res.should.be.json;
+					res.body.should.be.a('object');
+					res.body.should.include.keys(
+						'user', 'achieveWhat', 'achieveHow', 'achieveWhen', 'achieveWhy');
+					res.body.user.should.equal(newAchievement.user);
+					res.body.achieveWhat.should.equal(newAchievement.achieveWhat);
+					// res.body.achieveHow.should.equal(newAchievement.achieveHow); // returns two objects that look same but says they're not
+					res.body.achieveWhen.should.equal(newAchievement.achieveWhen);
+					res.body.achieveWhy.should.equal(newAchievement.achieveWhy);
+					res.body._id.should.not.be.null;
 
-	// 				return Achievement.findById(res.body.id);
-	// 			})
-	// 			.then(function(achievement) {
-	// 				achievement.user.should.equal(newAchievement.user);
-	// 				achievement.achieveWhat.should.equal(newAchievement.achieveWhat);
-	// 				achievement.achieveHow.should.equal(newAchievement.achieveHow);
-	// 				achievement.achieveWhen.should.equal(newAchievement.achieveWhen);
-	// 				achievement.achieveWhy.should.equal(newAchievement.achieveWhy);
-	// 			});
-	// 	});
-	// });
+					return Achievement.findById(res.body.id);
+				})
+				// .then(function(achievement) {
+				// 	console.log(achievement);
+				// 	achievement.user.should.equal(newAchievement.user);
+				// 	// achievement.achieveWhat.should.equal(newAchievement.achieveWhat);
+				// 	// achievement.achieveHow.should.equal(newAchievement.achieveHow);
+				// 	// achievement.achieveWhen.should.equal(newAchievement.achieveWhen);
+				// 	// achievement.achieveWhy.should.equal(newAchievement.achieveWhy);
+				// });
+		});
+	});
 
 	describe('PUT endpoint', function() {
 		it('should update fields sent over', function() {
