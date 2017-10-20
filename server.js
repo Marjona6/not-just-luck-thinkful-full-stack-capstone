@@ -37,7 +37,7 @@ function runServer(urlToUse) {
 }
 
 if (require.main === module) {
-    runServer().catch(err => console.error(err));
+    runServer(config.DATABASE_URL).catch(err => console.error(err));
 }
 
 function closeServer() {
