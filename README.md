@@ -39,7 +39,33 @@ Find a working prototype at http://not-just-luck.herokuapp.com/.
 * Once they have initially set up an account, view their past successes in one or more graphic representations (timelines, charts, graphs, visualizations, word clouds, etc.).
 
 ## Technical
-Not Just Luck was built as two separate parts. The back end uses Node.js, Express, and MongoDB. The front end uses React and accesses the mLab database through the separate back end. 
+Not Just Luck was built as two separate parts.
+
+<h3>Front End</h3>
+<ul>
+  <li>HTML5</li>
+  <li>CSS3</li>
+  <li>JavaScript</li>
+  <li>jQuery</li>
+  <li>React</li>
+</ul>
+<h3>Back End</h3>
+<ul>
+  <li>Node.js</li>
+  <li>Express.js</li>
+  <li>MongoDB</li>
+  <li>Mongoose</li>
+  <li>mLab database</li>
+  <li><a href="https://mochajs.org/">Mocha</a> and <a href="http://chaijs.com/">Chai</a> for testing</li>
+</ul>
+<h3>Responsive</h3>
+<ul>
+  <li>The app is fully responsive and quickly adapts to all mobile, tablet, and desktop viewports.</li>
+</ul>
+<h3>Security</h3>
+<ul>
+  <li>User passwords are encrypted using <a href="https://github.com/dcodeIO/bcrypt.js">bcrypt.js</a>.</li>
+</ul>
 
 ## Development Roadmap
 Planned additional features and improvements will allow users to:
@@ -48,10 +74,3 @@ Planned additional features and improvements will allow users to:
 * Refer back to these compliments (that help them to see that they are qualified and skilled) by viewing the "Bank."
 * Change password
 * Update email address
-
-The relevant user stories are:
-* As a user, I want to see motivational quotes on my homepage so that I can feel more motivated.
-* As a user, I want to change or reset my password so that it can be secure or in case I forget it.
-* As a user, I want to be able to update my email address or username in case it changes or I want it to change.
-* As a user, I want to upload compliments that have been paid to me by friends, colleagues, bosses, etc. so that I can refer back to them later when I feel like an "impostor."
-* As a user, I want to refer back to and view the compliments I have entered into the system so that I can become more motivated and confident about my skills and abilities.

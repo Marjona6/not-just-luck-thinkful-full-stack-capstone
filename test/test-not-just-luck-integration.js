@@ -17,8 +17,9 @@ const Achievement = require('../models/achievement');
 const User = require('../models/user');
 //console.log(User);
 const {app, runServer, closeServer} = require('../server');
-const TEST_DATABASE_URL = require('../config');
-// console.log(TEST_DATABASE_URL);
+// import TEST_DATABASE_URL from ('../config');
+const {DATABASE_URL, TEST_DATABASE_URL} = require('../config');
+console.log(TEST_DATABASE_URL);
 
 // chai
 const should = chai.should();
@@ -71,7 +72,9 @@ function tearDownDb() {
 describe('Achievements API resource', function() {
 
 	before(function() {
-		return runServer(TEST_DATABASE_URL);
+		return runServer(TEST_DATABASE_URL)
+		.then(console.log('running server'))
+		.catch(err => console.log({err}));
 	});
 
 	beforeEach(function() {

@@ -19,9 +19,9 @@ mongoose.Promise = global.Promise;
  // ---------------- RUN/CLOSE SERVER -----------------------------------------------------
 let server = undefined;
 
-function runServer() {
+function runServer(urlToUse) {
     return new Promise((resolve, reject) => {
-        mongoose.connect(config.DATABASE_URL, err => {
+        mongoose.connect(urlToUse, err => {
             if(err) {
                 return reject(err);
             }
