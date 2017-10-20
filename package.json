@@ -29,8 +29,8 @@
     "faker": "^3.1.0",
     "mocha": "^3.2.0"
   },
-  "engines": {
-    "node": "^8.2.1" },
+  // "engines": {
+  //   "node": "^8.2.1" },
   "scripts": {
     "test": "mocha",
     "start": "node server.js"
