@@ -25,7 +25,9 @@ function submitNewAccomplishment(user) {
 			};
 		};
 	var achWhen = $('input[id="datepicker"]').val();
-	achWhen = Date.parse(achWhen);
+	console.log(achWhen); // 10/31/2017 format
+	achWhen = Date.parse(achWhen); // returns unix timestamp
+	console.log('parsed: ' + achWhen);
 	const achWhy = $('input[id="achieve-why"]').val();
 	const newAchObject = {
 		user: user,
@@ -149,10 +151,20 @@ function showTimeline() {
 				myUl += `<li>${res.achievementOutput[i].achieveHow[j]}</li>`;
 			};
 			myUl += '</ul>';
-			let achWhenReadable = new Date(res.achievementOutput[i].achieveWhen);
-			let dd = achWhenReadable.getDate();
-			let mm = achWhenReadable.getMonth()+1;
-			let yyyy = achWhenReadable.getFullYear();
+			// console.log('here is the thing: ', new Date(res.achievementOutput[i].achieveWhen)); //parseInt this
+			// console.log(new Date(res.achievementOutput[i].achieveWhen).getDate());
+			// console.log('ach output when: ', res.achievementOutput[i].achieveWhen);
+			// console.log(res.achievementOutput[i].achieveWhen.getDate());
+			let achWhenReadable = res.achievementOutput[i].achieveWhen;
+			// achWhenReadable = Date(achWhenReadable); // returns 'Invalid Date'
+			// console.log('readable: ', achWhenReadable);
+			console.log('type of : ', typeof achWhenReadable); // string
+			var resAch = new Date(parseInt(achWhenReadable));
+			console.log('type of resach: ', typeof resAch);
+			console.log(resAch.getDate());
+			let dd = resAch.getDate();
+			let mm = resAch.getMonth()+1;
+			let yyyy = resAch.getFullYear();
 			// if statements to choose date display format go here
 			// defaults to European
 			if (dateFormat == 'in') {
@@ -193,6 +205,14 @@ $(document).ready(function () {
 	$('#account-signup-page').show();
 
 // USER FLOW 1: USER SIGNS UP FOR NEW ACCOUNT
+
+	// user wants to try a demo
+	$('#account-signup-page a').click(function(event) {
+		event.preventDefault();
+		showSignInPage();
+	});
+
+	// user signs up for new account
 	$('#js-new-account').on('click', function(event) {
 		const form = document.body.querySelector('#new-account-form');
 		if (form.checkValidity && !form.checkValidity()) {

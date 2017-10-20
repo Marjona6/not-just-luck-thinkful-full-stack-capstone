@@ -134,13 +134,11 @@ app.post('/signin', function (req, res) {
 // POST -----------------------------------------
 // creating a new achievement
 app.post('/new/create', (req, res) => {
-    //console.log(req.body);
     let achieveWhat = req.body.achieveWhat;
     achieveWhat = achieveWhat.trim();
     let achieveHow = req.body.achieveHow;
     let achieveWhy = req.body.achieveWhy;
     let achieveWhen = req.body.achieveWhen;
-    //console.log(achieveWhen);
     let user = req.body.user;
     
         Achievement.create({
@@ -164,7 +162,6 @@ app.post('/new/create', (req, res) => {
 
 // PUT --------------------------------------
 app.put('/achievement/:id', function (req, res) {
-    //console.log(res);
     let toUpdate = {};
     let updateableFields = ['achieveWhat', 'achieveHow', 'achieveWhen', 'achieveWhy'];
     updateableFields.forEach(function(field) {
@@ -187,7 +184,6 @@ app.put('/achievement/:id', function (req, res) {
 // GET ------------------------------------
 // accessing all of a user's achievements
 app.get('/achievements/:user', function (req, res) {
-    //console.log(req.params.user);
     Achievement
         .find()
         .sort('achieveWhen')
