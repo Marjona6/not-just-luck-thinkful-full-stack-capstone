@@ -25,9 +25,7 @@ function submitNewAccomplishment(user) {
 			};
 		};
 	var achWhen = $('input[id="datepicker"]').val();
-	console.log(achWhen); // 10/31/2017 format
 	achWhen = Date.parse(achWhen); // returns unix timestamp
-	console.log('parsed: ' + achWhen);
 	const achWhy = $('input[id="achieve-why"]').val();
 	const newAchObject = {
 		user: user,
@@ -36,40 +34,45 @@ function submitNewAccomplishment(user) {
 		achieveWhen: achWhen,
 		achieveWhy: achWhy
 	};
-	if (editToggle === false) {
-		$.ajax({
-				type: 'POST',
-				url: 'https://not-just-luck.herokuapp.com/new/create',
-				dataType: 'json',
-				data: JSON.stringify(newAchObject),
-				contentType: 'application/json'
-			})
-			.done(function (result) {
-				showTimeline();
-			})
-			.fail(function (jqXHR, error, errorThrown) {
-	            console.log(jqXHR);
-	            console.log(error);
-	            console.log(errorThrown);
-			});
-	} else if (editToggle === true) {
-		$.ajax({
-				type: 'PUT',
-				url: 'https://not-just-luck.herokuapp.com/achievement/' + achievementId,
-				dataType: 'json',
-				data: JSON.stringify(newAchObject),
-				contentType: 'application/json'
-			})
-			.done(function (result) {
-				showTimeline();
-				editToggle = false;
-			})
-			.fail(function (jqXHR, error, errorThrown) {
-	            console.log(jqXHR);
-	            console.log(error);
-	            console.log(errorThrown);
-			});
-	};
+	if (achWhat == '') {
+		alert("Don't be so modest! Please enter a description of your accomplishment.");
+	} else {
+		if (editToggle === false) {
+			$.ajax({
+					type: 'POST',
+					url: 'https://not-just-luck.herokuapp.com/new/create',
+					dataType: 'json',
+					data: JSON.stringify(newAchObject),
+					contentType: 'application/json'
+				})
+				.done(function (result) {
+					showTimeline();
+				})
+				.fail(function (jqXHR, error, errorThrown) {
+		            console.log(jqXHR);
+		            console.log(error);
+		            console.log(errorThrown);
+				});
+		} else if (editToggle === true) {
+			$.ajax({
+					type: 'PUT',
+					url: 'https://not-just-luck.herokuapp.com/achievement/' + achievementId,
+					dataType: 'json',
+					data: JSON.stringify(newAchObject),
+					contentType: 'application/json'
+				})
+				.done(function (result) {
+					showTimeline();
+					editToggle = false;
+				})
+				.fail(function (jqXHR, error, errorThrown) {
+		            console.log(jqXHR);
+		            console.log(error);
+		            console.log(errorThrown);
+				});
+		};
+	}
+	
 }
 
 function goBack() {
@@ -151,22 +154,12 @@ function showTimeline() {
 				myUl += `<li>${res.achievementOutput[i].achieveHow[j]}</li>`;
 			};
 			myUl += '</ul>';
-			// console.log('here is the thing: ', new Date(res.achievementOutput[i].achieveWhen)); //parseInt this
-			// console.log(new Date(res.achievementOutput[i].achieveWhen).getDate());
-			// console.log('ach output when: ', res.achievementOutput[i].achieveWhen);
-			// console.log(res.achievementOutput[i].achieveWhen.getDate());
-			let achWhenReadable = res.achievementOutput[i].achieveWhen;
-			// achWhenReadable = Date(achWhenReadable); // returns 'Invalid Date'
-			// console.log('readable: ', achWhenReadable);
-			console.log('type of : ', typeof achWhenReadable); // string
-			var resAch = new Date(parseInt(achWhenReadable));
-			console.log('type of resach: ', typeof resAch);
-			console.log(resAch.getDate());
-			let dd = resAch.getDate();
-			let mm = resAch.getMonth()+1;
-			let yyyy = resAch.getFullYear();
+			let achWhenReadable = new Date(parseInt(res.achievementOutput[i].achieveWhen));
+			let dd = achWhenReadable.getDate();
+			let mm = achWhenReadable.getMonth()+1;
+			let yyyy = achWhenReadable.getFullYear();
 			// if statements to choose date display format go here
-			// defaults to European
+			// defaults to European (dd/mm/yyyy)
 			if (dateFormat == 'in') {
 				achWhenReadable = yyyy + '/' + mm + '/' + dd;
 			} else if (dateFormat == 'us') {
@@ -192,7 +185,6 @@ function showTimeline() {
 $(document).ready(function () {
 	// when page first loads
 	$('*').scrollTop(0);
-	// backWarnToggle = false;
 	backToLandingPageToggle = false;
 	$('#signin-page').hide();
 	$('#account-setup-page').hide();
@@ -485,5 +477,3 @@ $(document).ready(function () {
 // put buttons together in a line?
 // user should be able to add their own skills/traits to checkbox list
 // add 'Oops, nothing here yet!' for empty achievement lists (new users)
-// fix issues with new users who create an account, then come back later to set up account--
-// ... it doesn't automatically take them to account setup page but rather homepage (very minor issue)
