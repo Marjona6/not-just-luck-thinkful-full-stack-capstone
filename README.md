@@ -27,13 +27,13 @@ AS A VISITOR, NOT LOGGED IN
 
 AS A LOGGED-IN USER
 * As a user, I want to set up my new account by describing some past successes so that I can reflect back on them later when I feel impostor syndrome setting in.
-![UI Flow handwritten draft](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/public/img/wf04.jpg)
+![UI Flow handwritten draft](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/wf04.jpg)
 
 * As a user, I want to view my past successes once I have entered them into the system so that I can combat impostor syndrome feelings.
 * As a user, I want to see graphic/visual representations of my past successes and the skills and traits I used to achieve them so I can know I am a capable person.
-![UI Flow handwritten draft](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/public/img/wf01.jpg)
-![UI Flow handwritten draft](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/public/img/wf02.jpg)
-![UI Flow handwritten draft](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/public/img/wf03.jpg)
+![UI Flow handwritten draft](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/wf01.jpg)
+![UI Flow handwritten draft](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/wf02.jpg)
+![UI Flow handwritten draft](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/wf03.jpg)
 
 ## Working Prototype
 Find a working prototype with Node at http://not-just-luck.herokuapp.com/ .
