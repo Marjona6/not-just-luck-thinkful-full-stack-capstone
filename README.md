@@ -3,7 +3,11 @@
 Not Just Luck is an interactive full-stack web app that helps users overcome impostor syndrome by guiding them to see the history of their own successes as well as the skills and traits that made those successes possible.
 
 ## Screenshots
-![Landing page screen shot--desktop](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/public/img/njl01.png)
+![Landing page screen shot](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/njl01.png)
+![Account setup screen shot](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/njl02.png)
+![User homepage screen shot](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/njl03.png)
+![Achievement timeline screen shot](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/njl04.png)
+![Skills word cloud screen shot](https://github.com/Marjona6/not-just-luck-thinkful-full-stack-capstone/blob/master/public/img/njl05.png)
 
 ## Use Case
 Not Just Luck is for anyone who struggles with impostor syndrome and would like a centralized place to record and reflect upon their accomplishments and what it took to achieve them. Not Just Luck is like a good friend who reminds you of your strengths when you forget.
@@ -61,7 +65,7 @@ Not Just Luck was built as two separate parts.
 </ul>
 <h3>Responsive</h3>
 <ul>
-  <li>The app is fully responsive and quickly adapts to all mobile, tablet, and desktop viewports.</li>
+  <li>The app is responsive and optimized for both desktop and mobile viewing and use.</li>
 </ul>
 <h3>Security</h3>
 <ul>
