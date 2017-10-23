@@ -72,7 +72,7 @@ Not Just Luck was built as two separate parts.
   <li>User passwords are encrypted using <a href="https://github.com/dcodeIO/bcrypt.js">bcrypt.js</a>.</li>
 </ul>
 
-##API Documentation
+## API Documentation
 API endpoints for the back end include:
 * POST to '/users/create' for creating a new user
 * POST to '/signin' to sign in an existing user
