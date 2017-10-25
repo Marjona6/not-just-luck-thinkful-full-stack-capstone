@@ -300,6 +300,23 @@ $(document).ready(function () {
 	            });
 		};
 
+		// clicking "Not Just Luck" logo takes the user to home page
+		$('#go-home').on('click', function(event) {
+			event.preventDefault();
+			if (newUserToggle == false) {
+				if (backWarnToggle === true) {
+					event.preventDefault();
+					if (confirm('Are you sure you want to go back? Your changes will not be saved.') == true) {
+						$('#input-form')[0].reset();
+						backWarnToggle = false;
+						showHomePage();
+					}
+				} else {
+					showHomePage();
+				}
+			}
+		});
+
 		// when user clicks Add Accomplishment button from #user-home-page
 		$('#js-add-accomplishment').on('click', function(event) {
 			event.preventDefault();
