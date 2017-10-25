@@ -389,6 +389,11 @@ footer a {
     text-decoration: none;
 }
 
+/* MISC */
+#ui-datepicker-div {
+    width: auto !important;
+}
+
 
 @media screen and (max-width: 740px) {
     .landing-image {
@@ -421,5 +426,4 @@ footer a {
     .landing-block {
         padding: 5rem 0;
     }
-
 }
