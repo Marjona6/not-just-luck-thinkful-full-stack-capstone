@@ -156,13 +156,14 @@ main {
     margin: 2%;
     display: inline-block;
     width: 25%;
-    vertical-align: top;
+    vertical-align: middle;
     min-width: 100px;
 }
 
 .landing-blurb {
     display: inline-block;
     width: 65%;
+    vertical-align: middle;
 }
 
 .landing-block:nth-child(odd) {
@@ -172,7 +173,6 @@ main {
 
 .landing-block:nth-child(odd) .landing-image {
     height: 200px;
-    width: auto;
     display: inline-block;
 }
 
@@ -187,7 +187,6 @@ main {
 
 .landing-block:nth-child(even) .landing-image {
     height: 200px;
-    width: auto;
     display: inline-block;
 }
 
@@ -198,19 +197,16 @@ main {
 #block-1 .landing-image {
     background: transparent url("../img/graduate.jpg") no-repeat center center;
     background-size: cover;
-/*    width: 20%;
-*/}
+}
 
 #block-2 .landing-image {
     background: transparent url("../img/laptop-woman.jpg") no-repeat center center;
     background-size: cover;
-/*    width: 20%;
-*/}
+}
 
 #block-3 .landing-image {
     background: transparent url("../img/art-woman.jpg") no-repeat center center;
     background-size: cover;
-    width: 20%;
 }
 
 /* ACCOUNT SIGNUP PAGE */
@@ -263,14 +259,14 @@ main {
 */}
 
 #account-setup-page ul.checkbox li label {
-/*    width: 85%;
-*/    display: inline-block;
+    display: inline-block;
     width: 115px;
-    height: 50px;
+    min-height: 60px;
     border: 2px solid #1E3F20;
     border-radius: 5px;
     margin: 5px;
-    padding-top: 10%;
+    padding-top: 10px;
+    padding-bottom: 10px;
     cursor: pointer;
     vertical-align: top;
     text-align: center;
@@ -308,6 +304,11 @@ main {
 /* USER HOMEPAGE */
 #user-home-page {
     margin: 2rem 0 2rem 0;
+}
+
+#user-home-page p {
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 #user-home-page a {
@@ -401,4 +402,24 @@ footer a {
         display: block;
         width: 80%;
     }
+}
+
+@media screen and (max-width: 430px) {
+    header h1 {
+        font-size: 200%;
+    }
+
+    #js-signin-link, #js-signout-link {
+        margin-top: 1.5rem;
+    }
+
+    #hero-blurb {
+        padding-top: 50px;
+        font-size: 300%;
+    }
+
+    .landing-block {
+        padding: 5rem 0;
+    }
+
 }
